@@ -20,7 +20,7 @@ import Register from "../screens/Register"
 
 const ProtectedRoute = ({ user, redirectPath = "/login", children }: any) => {
   // change this
-  if (!user) {
+  if (user) {
     return <Navigate to={redirectPath} replace />
   }
 
