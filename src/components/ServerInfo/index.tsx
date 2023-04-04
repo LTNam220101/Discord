@@ -183,10 +183,9 @@ function ServerInfo() {
       <Stack
         direction="row"
         spacing={1}
-        m={-1}
         mt="auto"
         p={1}
-        sx={{ backgroundColor: theme.palette.background.paper }}
+        sx={{ backgroundColor: "rgba(35,36,40,255)" }}
       >
         <Stack
           direction="row"
@@ -218,9 +217,11 @@ function ServerInfo() {
           </Badge>
           <Stack spacing={0.25}>
             <Typography variant="caption" fontWeight="bold">
+              Nam
               {/* {userData?.fullname?.split(" ")[0]} */}
             </Typography>
             <Typography variant="caption" color="lightgray">
+              123123
               {/* #{userData?._id.slice(0, 6)} */}
             </Typography>
           </Stack>
@@ -233,6 +234,7 @@ function ServerInfo() {
             // onClick={() => dispatch(setOnMicrophone(!onMicrophone))}
           >
             {/* {onMicrophone ? <MicIcon /> : <MicOffIcon />} */}
+            <MicIcon />
           </IconButton>
 
           <IconButton
@@ -241,6 +243,7 @@ function ServerInfo() {
             // onClick={() => dispatch(setOnCamera(!onCamera))}
           >
             {/* {onCamera ? <CameraIcon /> : <CameraOffIcon />} */}
+            <CameraIcon />
           </IconButton>
           <IconButton
             onClick={() => {
