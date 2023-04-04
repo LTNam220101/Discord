@@ -94,7 +94,17 @@ function ServerInfo() {
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
           onClick={handleClick}
-          sx={{ color: colors.grey[300] }}
+          sx={{
+            color: colors.grey[300],
+            height: "48px",
+            fontWeight: "bold",
+            borderRadius: 0,
+            boxShadow: "0 2px 1px -1px rgba(30,31,34,255)",
+            marginBottom: "20px",
+            ":hover": {
+              backgroundColor: "rgba(53,55,60,255)"
+            }
+          }}
         >
           {/* {currentServer.name} */}
           Server TFT
@@ -159,11 +169,13 @@ function ServerInfo() {
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon sx={{ color: colors.grey[500] }} />}
+            sx={{ flexDirection: "row-reverse", padding: 0 }}
           >
             <Typography
               color={colors.grey[500]}
-              variant="subtitle1"
               component="h3"
+              variant="body2"
+              sx={{ fontSize: "12px" }}
             >
               {title.toUpperCase()}
             </Typography>
