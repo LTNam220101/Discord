@@ -12,7 +12,7 @@ import {
 // import { useSelector } from 'react-redux';
 // import { selectListJoinedServer } from 'src/features/server/serverSlice';
 
-function Profiles() {
+const Profiles = () => {
 //   const { userData: user } = useCheckAuth();
 //   const servers = useSelector(selectListJoinedServer);
 //   const [avatar, setAvatar] = React.useState(user.avatar);
@@ -76,14 +76,13 @@ function Profiles() {
       </Typography>
       <Divider color={colors.grey[700]} />
       <Stack py={2}>
-        {/* {servers.map((server) => (
           <Stack
-            key={server.id}
+            // key={server.id}
             m={0.5}
             height={60}
             width={500}
             alignItems="center"
-            backgroundColor={colors.grey[900]}
+            bgcolor={colors.grey[900]}
             direction="row"
             borderRadius={2}
           >
@@ -93,11 +92,10 @@ function Profiles() {
                 height: 45,
                 marginLeft: 2,
               }}
-              src={server.avatar}
+              // src={server.avatar}
             />
-            <Typography px={2}>{server.name}</Typography>
+            {/* <Typography px={2}>{server.name}</Typography> */}
           </Stack>
-        ))} */}
       </Stack>
     </Stack>
   );

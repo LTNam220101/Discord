@@ -40,7 +40,7 @@ const ServersList = () => {
       height="100%"
       py={1}
       spacing={2}
-      backgroundColor="rgba(30,31,34,255)"
+      bgcolor="rgba(30,31,34,255)"
     >
       <ServerItem isDirect={true} name="Direct Messages" />
 
