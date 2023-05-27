@@ -17,6 +17,7 @@ import * as colors from "@mui/material/colors"
 import { ToastContainer } from "react-toastify"
 import Login from "../screens/Login"
 import Register from "../screens/Register"
+import UserSetting from "../screens/UserSetting/UserSetting"
 
 const ProtectedRoute = ({ user, redirectPath = "/login", children }: any) => {
   // change this
@@ -71,6 +72,7 @@ const Router = () => {
             element={
               <ProtectedRoute /*user={user}*/>
                 <Home />
+                <UserSetting />
               </ProtectedRoute>
             }
           />
