@@ -1,6 +1,6 @@
 export interface DialogEditUsernameProps {
   user: {
-    username?: string;
+    username: string;
   };
   handleCloseModal: (isOpen: boolean) => void;
 };
