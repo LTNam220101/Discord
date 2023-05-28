@@ -5,7 +5,6 @@ import { Outlet } from "react-router-dom"
 import ServersList from "../../components/ServersList"
 import ServerInfo from "../../components/ServerInfo"
 import Chat from "./../../components/Chat/index"
-import Profiles from "../../components/Profiles/Profiles"
 
 const Home = () => {
   return (
@@ -24,7 +23,6 @@ const Home = () => {
 
         <Box height="100%" width="100%">
           <Chat />
-          <Profiles />
         </Box>
       </Stack>
     </>
