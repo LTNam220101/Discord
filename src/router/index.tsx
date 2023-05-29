@@ -73,13 +73,18 @@ const Router = () => {
             path=""
             element={
               <ProtectedRoute /*user={user}*/>
-                <Home />
+                {/* <Home /> */}
                 {/* <UserSetting /> */}
                 {/* <TextChatCpn /> */}
                 {/* <ServerSetting /> */}
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="" element={<Home />} />
+            {/* Thêm route mới ở đây vd /channels/:serverId, /channels/:serverId/:channelId, /setting */}
+            {/* <Route path="" element={<Home />} />
+            <Route path="" element={<Home />} /> */}
+          </Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Routes>
