@@ -104,7 +104,7 @@ function ServerItem({
       ></Box>
 
       <Box
-        onMouseEnter={handleMouseEnter}
+        onMouseEnter={() => handleMouseEnter}
         onMouseLeave={() => {
           setIsHover(false)
           setAnchorEl(null)

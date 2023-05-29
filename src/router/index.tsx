@@ -17,6 +17,9 @@ import * as colors from "@mui/material/colors"
 import { ToastContainer } from "react-toastify"
 import Login from "../screens/Login"
 import Register from "../screens/Register"
+import UserSetting from "../screens/UserSetting/UserSetting"
+import TextChatCpn from "../components/Chat/TextChatCPN/TextChatCPN"
+import ServerSetting from "../screens/ServerSetting/ServerSetting"
 
 const ProtectedRoute = ({ user, redirectPath = "/login", children }: any) => {
   // change this
@@ -70,10 +73,18 @@ const Router = () => {
             path=""
             element={
               <ProtectedRoute /*user={user}*/>
-                <Home />
+                {/* <Home /> */}
+                {/* <UserSetting /> */}
+                {/* <TextChatCpn /> */}
+                {/* <ServerSetting /> */}
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="" element={<Home />} />
+            {/* Thêm route mới ở đây vd /channels/:serverId, /channels/:serverId/:channelId, /setting */}
+            {/* <Route path="" element={<Home />} />
+            <Route path="" element={<Home />} /> */}
+          </Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Routes>
