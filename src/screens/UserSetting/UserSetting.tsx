@@ -18,7 +18,7 @@ const UserSetting = /*NiceModal.create(*/() => {
   const handleIndexTab = (index: number) => {
     setIndex(index);
   };
-  const modal = useModal();
+  // const modal = useModal();
 
   return (
     <Dialog
@@ -57,8 +57,8 @@ const UserSetting = /*NiceModal.create(*/() => {
                   position="absolute"
                   textAlign="center"
                 >
-                  <IconButton onClick={() => modal.hide()}>
-                  {/* <IconButton> */}
+                  {/* <IconButton onClick={() => modal.hide()}> */}
+                  <IconButton>
                     <HighlightOffIcon fontSize="large" />
                   </IconButton>
                   <Typography color="grey"> ESC </Typography>

@@ -4,8 +4,7 @@ import { Helmet } from "react-helmet"
 import { Outlet } from "react-router-dom"
 import ServersList from "../../components/ServersList"
 import ServerInfo from "../../components/ServerInfo"
-import Chat from "../../components/Chat/ChatColumn"
-import ChatColumn from "../../components/Chat/ChatColumn"
+import Chat from "./../../components/Chat/index"
 
 const Home = () => {
   return (
@@ -23,7 +22,7 @@ const Home = () => {
         </Box>
 
         <Box height="100%" width="100%">
-          <ChatColumn />
+          <Chat />
         </Box>
       </Stack>
     </>

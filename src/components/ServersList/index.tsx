@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Stack, useTheme } from "@mui/material"
 import ServerItem from "../ServerItem"
-import AddServerBtn from "../AddServerBtn/AddServerOnColumn"
+import AddServerBtn from "../AddServerBtn"
 
 const listJoinedServer = [
   {
