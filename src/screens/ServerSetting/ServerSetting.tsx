@@ -20,7 +20,7 @@ const ServerSetting: React.FC = () => {
     const handleIndexTab = (index: number) => {
         setIndex(index);
     };
-    //   const modal = useModal();
+    const modal = useModal();
 
     return (
         <Dialog
