@@ -1,0 +1,14 @@
+Link tham khảo: https://github.com/LTNam220101/PinterestPWA/tree/master/src/redux-saga
+
+B1: Viết action: src\redux-saga\actions.ts
+    VD: export const GET_PINS = "GET_PINS"
+        export const GET_PIN = "GET_PIN"
+        export const GET_BOARDS_HAS_PIN = "GET_BOARDS_HAS_PIN"
+    Viết như trong postman
+
+B2: Viết trong file src\redux-saga\sagas
+    Viết như các folder trong postman: Authen, User, ...
+
+B3: import từ B2 vào file src\redux-saga\sagas.ts
+
+Phần Reducers sẽ để làm sau
