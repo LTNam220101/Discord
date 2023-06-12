@@ -31,6 +31,9 @@ import {
 } from "@mui/icons-material"
 import { useSelector, useDispatch } from "react-redux"
 import { Link as LinkDom } from "react-router-dom"
+import NiceModal from "@ebay/nice-modal-react"
+import UserSetting from "../../screens/UserSetting/UserSetting"
+import ServerSetting from "../../screens/ServerSetting/ServerSetting"
 
 // const ChannelRow = ({ channel }) => {
 
@@ -133,7 +136,7 @@ function ServerInfo() {
           <MenuItem
             onClick={() => {
               handleClose()
-              // NiceModal.show(ServerSetting)
+              NiceModal.show(ServerSetting)
             }}
           >
             <Stack width={190} direction="row" justifyContent="space-between">

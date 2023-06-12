@@ -20,7 +20,7 @@ const ServerSetting: React.FC = () => {
     const handleIndexTab = (index: number) => {
         setIndex(index);
     };
-    //   const modal = useModal();
+    const modal = useModal();
 
     return (
         <Dialog
@@ -60,8 +60,8 @@ const ServerSetting: React.FC = () => {
                                     pt={6}
                                     position="absolute"
                                 >
-                                    {/* <IconButton onClick={() => modal.hide()}> */}
-                                    <IconButton>    
+                                    <IconButton onClick={() => modal.hide()}>
+                                    {/* <IconButton>     */}
                                         <HighlightOffIcon fontSize="large" />
                                     </IconButton>
                                     <Typography color="grey"> ESC </Typography>
