@@ -20,6 +20,7 @@ import Register from "../screens/Register"
 import UserSetting from "../screens/UserSetting/UserSetting"
 import TextChatCpn from "../components/Chat/TextChatCPN/TextChatCPN"
 import ServerSetting from "../screens/ServerSetting/ServerSetting"
+import NiceModal from "@ebay/nice-modal-react"
 
 const ProtectedRoute = ({ user, redirectPath = "/login", children }: any) => {
   // change this
@@ -66,32 +67,34 @@ const Router = () => {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <ToastContainer />
-        <Routes>
-          <Route
-            path=""
-            element={
-              <ProtectedRoute /*user={user}*/>
-                <Home />
-                {/* <UserSetting /> */}
-                {/* <TextChatCpn /> */}
-                {/* <ServerSetting /> */}
-              </ProtectedRoute>
-            }
-          >
-            <Route path="" element={<Home />} />
-            <Route path="/channels/:serverId" element={<Home />} />
-            <Route path="/channels/:serverId/:channelId" element={<Home />} />
-            <Route path="/setting" element={<UserSetting />} />
-            
-            {/* Thêm route mới ở đây vd /channels/:serverId, /channels/:serverId/:channelId, /setting */}
-            {/* <Route path="" element={<Home />} />
+        <NiceModal.Provider>
+          <CssBaseline />
+          <ToastContainer />
+          <Routes>
+            <Route
+              path=""
+              element={
+                <ProtectedRoute /*user={user}*/>
+                  <Home />
+                  <UserSetting />
+                  {/* <TextChatCpn /> */}
+                  {/* <ServerSetting /> */}
+                </ProtectedRoute>
+              }
+            >
+              <Route path="" element={<Home />} />
+              <Route path="/channels/:serverId" element={<Home />} />
+              <Route path="/channels/:serverId/:channelId" element={<Home />} />
+              <Route path="/setting" element={<UserSetting />} />
+
+              {/* Thêm route mới ở đây vd /channels/:serverId, /channels/:serverId/:channelId, /setting */}
+              {/* <Route path="" element={<Home />} />
             <Route path="" element={<Home />} /> */}
-          </Route>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-        </Routes>
+            </Route>
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+          </Routes>
+        </NiceModal.Provider>
       </ThemeProvider>
     </BrowserRouter>
   )

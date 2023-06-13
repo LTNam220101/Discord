@@ -18,7 +18,7 @@ const UserSetting = /*NiceModal.create(*/() => {
   const handleIndexTab = (index: number) => {
     setIndex(index);
   };
-  const modal = useModal();
+  const modal = useModal("1");
 
   return (
     <Dialog
