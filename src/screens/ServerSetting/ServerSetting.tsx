@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import NiceModal, { muiDialogV5, useModal } from '@ebay/nice-modal-react';
 import SidebarServer from '../../components/ServerSetting/SidebarServer';
 import ContentSettingServer from '../../components/ServerSetting/ContentSettingServer';
+import { Home } from '@mui/icons-material';
 
 const ServerSetting: React.FC = () => {
     const theme = useTheme();
@@ -20,11 +21,11 @@ const ServerSetting: React.FC = () => {
     const handleIndexTab = (index: number) => {
         setIndex(index);
     };
-    const modal = useModal();
+    const modal = useModal("1");
 
     return (
         <Dialog
-            //   {...muiDialogV5(modal)}
+            {...muiDialogV5(modal)}
             open
             fullWidth
             maxWidth={false}
@@ -60,8 +61,8 @@ const ServerSetting: React.FC = () => {
                                     pt={6}
                                     position="absolute"
                                 >
-                                    {/* <IconButton onClick={() => modal.hide()}> */}
-                                    <IconButton>    
+                                    <IconButton onClick={() => modal.hide()}>
+                                        {/* <IconButton>     */}
                                         <HighlightOffIcon fontSize="large" />
                                     </IconButton>
                                     <Typography color="grey"> ESC </Typography>

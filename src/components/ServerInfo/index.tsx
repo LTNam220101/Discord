@@ -262,7 +262,7 @@ function ServerInfo() {
           </IconButton>
           <IconButton
             onClick={() => {
-              // NiceModal.show(UserSetting)
+              NiceModal.show(UserSetting)
             }}
             color="default"
             size="small"

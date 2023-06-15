@@ -76,7 +76,7 @@ const Router = () => {
               element={
                 <ProtectedRoute /*user={user}*/>
                   <Home />
-                  <UserSetting />
+                  {/* <UserSetting /> */}
                   {/* <TextChatCpn /> */}
                   {/* <ServerSetting /> */}
                 </ProtectedRoute>

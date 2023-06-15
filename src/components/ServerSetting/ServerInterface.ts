@@ -18,3 +18,26 @@ export interface User {
   export interface ContentSettingServerProps {
     index: number;
   }
+
+  export interface Permission {
+    name: string;
+    value: boolean;
+    description: string;
+  }
+  
+  export interface Role {
+    name: string;
+    countMember: number;
+    permissions: Permission[];
+  }
+  
+  export interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+  }
+
+  export interface A11yProps {
+    id: string;
+    'aria-controls': string;
+}

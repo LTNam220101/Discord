@@ -12,6 +12,8 @@ import * as colors from "@mui/material/colors"
 import PeopleAltTwoTone from "@mui/icons-material/PeopleAltTwoTone"
 import { useNavigate } from "react-router"
 import { ServerItemProps } from "./ServerItemProps"
+import NiceModal from "@ebay/nice-modal-react"
+import ServerSettingDialog from "../ServerSetting/ServerSettingDialog"
 
 function ServerItem({
   isDirect = false,
@@ -72,7 +74,7 @@ function ServerItem({
         <MenuItem
           onClick={() => {
             // dispatch(getServerInfoAction(serverId))
-            // NiceModal.show(ServerSettingDialog)
+            NiceModal.show(ServerSettingDialog)
           }}
         >
           Server Settings
