@@ -61,10 +61,9 @@ const ChatColumn: React.FC<ChatColumnProps> = (/*{ socket }*/) => {
         <Stack direction="row" ml="auto" alignItems="center" spacing={1}>
           {/* {curChannel._id && ( */}
             <IconButton
-              // onClick={() =>
-              //   NiceModal.show(ListUserChannel, { channelId: curChannel._id })
-              
-              // }
+              onClick={() =>
+              NiceModal.show(ListUserChannel, { channelId: "2" /*curChannel._id*/ })
+              }
             >
               <PeopleIcon />
             </IconButton>

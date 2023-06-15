@@ -21,7 +21,7 @@ interface ListUserChannelProps {
 }
 
 const ListUserChannel: React.FC<ListUserChannelProps> = ({ channelId }) => {
-  const modal = useModal();
+  const modal = useModal(channelId);
 
   const [channelDetail, setChannelDetail] = React.useState<any>(null);
 

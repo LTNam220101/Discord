@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { Box, Tooltip, Typography, useTheme, Stack } from "@mui/material"
 import * as colors from "@mui/material/colors"
+import NiceModal from "@ebay/nice-modal-react"
+import AddServerDialog from "./AddServerDialog"
 
 function AddServerBtn() {
   const theme = useTheme()
@@ -17,7 +19,7 @@ function AddServerBtn() {
         justifyContent="space-between"
         alignItems="center"
         onClick={() => {
-          //   NiceModal.show(AddServerDialog)
+            NiceModal.show(AddServerDialog)
         }}
       >
         <Box
