@@ -58,7 +58,7 @@ export const createReducer = <T>(
       case success:
         return { ...action.payload, success: true }
       case failure:
-        return { ...action.payload, response: undefined, success: false }
+        return { ...action.payload, success: false }
       case clear:
         return null
       default:

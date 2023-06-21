@@ -1,8 +1,12 @@
 import { combineReducers } from "@reduxjs/toolkit"
-// import { GetNotiResult } from "components/Notification/reducers"
-//Reducer sẽ viết khi ghép api
+import { LoginResult } from "../screens/Login/reducers"
+import { registerResult } from "../screens/Register/reducers"
+import { LogoutResult } from "../screens/UserSetting/reducers"
+
 const rootReducer = combineReducers({
-  // getPinsUserResult: GetPinsUserResult
+  registerResult: registerResult,
+  loginResult: LoginResult,
+  logoutResult: LogoutResult,
 })
 
 export type State = ReturnType<typeof rootReducer>

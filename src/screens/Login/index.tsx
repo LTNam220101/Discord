@@ -1,5 +1,4 @@
-import * as React from "react"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import {
   Button,
   TextField,
@@ -9,28 +8,65 @@ import {
   Grid,
   Box,
   Container,
-  useTheme
+  useTheme,
+  Alert
 } from "@mui/material"
 import { ReactComponent as Discord } from "../../assets/discord.svg"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import * as yup from "yup"
 import { Link as LinkDom } from "react-router-dom"
-import { Formik } from "formik"
 import { LoginForm } from "./interfaces"
+import { State } from "../../redux-saga/reducers"
+import { useEffect, useState } from "react"
+import { LOGIN_CLEAR } from "./reducers"
+import { login } from "./actions"
+import { Formik } from "formik"
 
 const schema = yup.object().shape({
-  email: yup.string().email().required(),
+  username: yup.string().email().required(),
   password: yup.string().required()
 })
 
-export default function LoginPage() {
-  const dispatch = useDispatch()
+export default function LoginPage({ user }: any) {
   const theme = useTheme()
 
+  const dispatch = useDispatch()
   const navigate = useNavigate()
+  const loginResult = useSelector((state: State) => state.loginResult)
+  const [err, setErr] = useState(false)
+
+  useEffect(() => {
+    if (user) {
+      navigate("/")
+    }
+    // return () => {
+    //   dispatch({
+    //     type: LOGIN_CLEAR
+    //   })
+    // }
+  }, [user])
+
+  useEffect(() => {
+    if (loginResult) {
+      if (loginResult.success) {
+        localStorage.setItem(
+          "accessToken",
+          loginResult.response?.accessToken as string
+        )
+        localStorage.setItem(
+          "refreshToken",
+          loginResult.response?.refreshToken as string
+        )
+        localStorage.setItem("id", loginResult.response?.id as string)
+        // navigate("/")
+      } else {
+        setErr(true)
+      }
+    }
+  }, [loginResult])
 
   const handleSubmit = (values: LoginForm) => {
-    console.log(values)
+    dispatch(login(values))
   }
 
   return (
@@ -47,7 +83,7 @@ export default function LoginPage() {
         <Discord />
         <Formik
           validationSchema={schema}
-          initialValues={{ email: "", password: "" } as LoginForm}
+          initialValues={{ username: "", password: "" } as LoginForm}
           onSubmit={handleSubmit}
         >
           {({
@@ -59,15 +95,16 @@ export default function LoginPage() {
             isValid
           }) => (
             <form className="form" onSubmit={handleSubmit}>
+              {err && <Alert severity="error">Invalid email or password</Alert>}
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 label="Email address"
                 autoComplete="email"
-                onChange={handleChange("email")}
-                onBlur={handleBlur("email")}
-                value={values.email}
+                onChange={handleChange("username")}
+                onBlur={handleBlur("username")}
+                value={values.username}
                 autoFocus
               />
               <TextField

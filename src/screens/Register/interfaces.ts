@@ -1,6 +1,6 @@
 export interface RegisterForm {
-  name: string
-  email: string
+  // name: string
+  username: string
   password: string
-  passwordCfm: string
+  repass: string
 }

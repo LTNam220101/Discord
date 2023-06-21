@@ -1,5 +1,5 @@
-import * as React from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { Navigate, useNavigate } from "react-router-dom"
 import {
   Button,
   TextField,
@@ -9,30 +9,52 @@ import {
   Grid,
   Box,
   Container,
-  useTheme
+  useTheme,
+  Alert
 } from "@mui/material"
 import { ReactComponent as Discord } from "../../assets/discord.svg"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import * as yup from "yup"
 import { Link as LinkDom } from "react-router-dom"
-import { Formik } from "formik"
+import { ErrorMessage, Formik } from "formik"
 import { RegisterForm } from "./interfaces"
+import { register } from "./actions"
+import { State } from "../../redux-saga/reducers"
 
 const schema = yup.object().shape({
-  email: yup.string().email().required(),
+  username: yup.string().email().required(),
   password: yup.string().required(),
-  passwordCfm: yup
+  repass: yup
     .string()
-    .oneOf([yup.ref("password"), undefined], "Password must match"),
-  name: yup.string().required()
+    .oneOf([yup.ref("password"), undefined], "Password must match")
+  // name: yup.string().required()
 })
 
-export default function Register() {
-  const dispatch = useDispatch()
+export default function Register({ user }: any) {
+  if (user) {
+    return <Navigate to={'/'} replace />
+  }
   const theme = useTheme()
 
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const registerResult = useSelector((state: State) => state.registerResult)
+  const [err, setErr] = useState<null | string>(null)
+
+  useEffect(() => {
+    if (registerResult) {
+      if (registerResult.success) {
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+        navigate("/login")
+      } else {
+        setErr(registerResult.response?.message as string)
+      }
+    }
+  }, [registerResult])
+
   const handleSubmit = (values: RegisterForm) => {
-    console.log(values)
+    dispatch(register(values))
   }
 
   return (
@@ -51,10 +73,10 @@ export default function Register() {
           validationSchema={schema}
           initialValues={
             {
-              email: "",
+              username: "",
               password: "",
-              passwordCfm: "",
-              name: ""
+              repass: ""
+              // name: ""
             } as RegisterForm
           }
           onSubmit={handleSubmit}
@@ -68,7 +90,7 @@ export default function Register() {
             isValid
           }) => (
             <form className="form" onSubmit={handleSubmit}>
-              <TextField
+              {/* <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -77,16 +99,17 @@ export default function Register() {
                 onBlur={handleBlur("name")}
                 value={values.name}
                 autoFocus
-              />
+              /> */}
+              {err && <Alert severity="error">{err}</Alert>}
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 label="Email address"
                 autoComplete="email"
-                onChange={handleChange("email")}
-                onBlur={handleBlur("email")}
-                value={values.email}
+                onChange={handleChange("username")}
+                onBlur={handleBlur("username")}
+                value={values.username}
               />
               <TextField
                 margin="normal"
@@ -105,9 +128,9 @@ export default function Register() {
                 fullWidth
                 label="Comfirm password"
                 type="password"
-                onChange={handleChange("passwordCfm")}
-                onBlur={handleBlur("passwordCfm")}
-                value={values.passwordCfm}
+                onChange={handleChange("repass")}
+                onBlur={handleBlur("repass")}
+                value={values.repass}
                 autoComplete="current-password"
               />
               <Button

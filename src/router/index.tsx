@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import {
   BrowserRouter,
   Navigate,
@@ -21,10 +21,11 @@ import UserSetting from "../screens/UserSetting/UserSetting"
 import TextChatCpn from "../components/Chat/TextChatCPN/TextChatCPN"
 import ServerSetting from "../screens/ServerSetting/ServerSetting"
 import NiceModal from "@ebay/nice-modal-react"
+import { State } from "../redux-saga/reducers"
 
 const ProtectedRoute = ({ user, redirectPath = "/login", children }: any) => {
   // change this
-  if (user) {
+  if (!user) {
     return <Navigate to={redirectPath} replace />
   }
 
@@ -33,6 +34,12 @@ const ProtectedRoute = ({ user, redirectPath = "/login", children }: any) => {
 
 const Router = () => {
   const dispatch = useDispatch()
+  const loginResult = useSelector((state: State) => state.loginResult)
+  const user =
+    (loginResult?.response?.refreshToken as string) ||
+    localStorage.getItem("refreshToken")
+  // const id = localStorage.getItem("id")
+
   const theme = React.useMemo(
     () =>
       createTheme({
@@ -55,8 +62,6 @@ const Router = () => {
       }),
     []
   )
-  //   const user = localStorage.getItem("refreshToken")
-  //   const id = localStorage.getItem("id")
 
   // const appStatus = useSelector(getAppStatus);
 
@@ -74,7 +79,7 @@ const Router = () => {
             <Route
               path=""
               element={
-                <ProtectedRoute /*user={user}*/>
+                <ProtectedRoute user={user}>
                   <Home />
                   {/* <UserSetting /> */}
                   {/* <TextChatCpn /> */}
@@ -91,8 +96,8 @@ const Router = () => {
               {/* <Route path="" element={<Home />} />
             <Route path="" element={<Home />} /> */}
             </Route>
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
+            <Route path="login" element={<Login user={user} />} />
+            <Route path="register" element={<Register user={user} />} />
           </Routes>
         </NiceModal.Provider>
       </ThemeProvider>

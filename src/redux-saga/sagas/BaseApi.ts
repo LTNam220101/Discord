@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: `${import.meta.env.REACT_APP_REST_ENDPOINT}`,
+  baseURL: `${import.meta.env.VITE_APP_REST_ENDPOINT}`,
   headers: {
     Accept: "application/json"
   }
