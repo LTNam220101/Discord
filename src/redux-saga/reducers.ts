@@ -1,8 +1,19 @@
+
 import { combineReducers } from "@reduxjs/toolkit"
-// import { GetNotiResult } from "components/Notification/reducers"
-//Reducer sẽ viết khi ghép api
+import { loginReducer, logoutReducer, registerReducer } from './sagas/Authentication/reducers';
+import { addUserToServerRoleReducer, createServerReducer,deleteServerReducer,getServerInfoReducer,listJoinServerReducer, updateServerReducer } from './sagas/Server/reducers';
+
+
 const rootReducer = combineReducers({
-  // getPinsUserResult: GetPinsUserResult
+  register: registerReducer,
+  login:loginReducer,
+  logout:logoutReducer,
+  createServer:createServerReducer,
+  listServer:listJoinServerReducer,
+  updateServer:updateServerReducer,
+  getServerInfo:getServerInfoReducer,
+  deleteServer:deleteServerReducer,
+  addUserToServerRole:addUserToServerRoleReducer,
 })
 
 export type State = ReturnType<typeof rootReducer>

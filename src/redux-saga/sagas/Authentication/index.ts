@@ -1,4 +1,5 @@
+
 import login from './Login';
 import register from './Register';
-
-export { login, register };
+import logout from './Logout'
+export { login, register,logout };

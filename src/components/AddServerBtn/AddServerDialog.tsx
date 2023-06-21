@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import NiceModal, { muiDialogV5, useModal } from '@ebay/nice-modal-react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // import {
 //     createServerAction,
 //     getListJoinedServerAction,
@@ -21,13 +21,18 @@ import { useDispatch } from 'react-redux';
 // import serverAPI from 'src/features/server/serverAPI';
 // import LoadingModal from 'src/commons/components/LoadingModal';
 import { toast } from 'react-toastify';
+import { State } from '../../redux-saga/reducers';
+import { CREATESERVER } from '../../redux-saga/actions';
 
-const AddServerDialog: React.FC = () => {
+const AddServerDialog= NiceModal.create(() => {
     const modal = useModal();
     const dispatch = useDispatch();
     const [nameServer, setNameServer] = useState<string | null>(null);
     const [description, setDescription] = useState<string | null>(null);
     const [serverCode, setServerCode] = useState<string | null>(null);
+
+    const UserId = useSelector((state: State) => state.login.signIn.userInfo.id);
+    console.log(UserId);
 
     const handleNameServer = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNameServer(e.target.value);
@@ -46,10 +51,11 @@ const AddServerDialog: React.FC = () => {
             name: nameServer,
             description: description,
             isPublic: true,
+            ownerId:UserId,
         };
 
-        // dispatch(createServerAction(data));
-
+        dispatch({type:CREATESERVER,payload:data});
+        console.log(data)
         modal.hide();
     };
 
@@ -132,6 +138,7 @@ const AddServerDialog: React.FC = () => {
             </Container>
         </Dialog>
     );
-};
+}
+)
 
 export default AddServerDialog;

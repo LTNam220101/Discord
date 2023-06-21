@@ -30,10 +30,13 @@ import {
   AddCircle as AddICon
 } from "@mui/icons-material"
 import { useSelector, useDispatch } from "react-redux"
-import { Link as LinkDom } from "react-router-dom"
-import NiceModal from "@ebay/nice-modal-react"
+import { Link as LinkDom, useRouteError } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { State } from "../../redux-saga/reducers"
+import { AUTH_LOGOUT } from "../../redux-saga/actions"
 import UserSetting from "../../screens/UserSetting/UserSetting"
-import ServerSetting from "../../screens/ServerSetting/ServerSetting"
+import NiceModal from "@ebay/nice-modal-react"
+
 
 // const ChannelRow = ({ channel }) => {
 
@@ -78,10 +81,36 @@ import ServerSetting from "../../screens/ServerSetting/ServerSetting"
 function ServerInfo() {
   const theme = useTheme()
   const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
 
+  const HandleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    setMenuOpen(true);
+    setMenuAnchor(event.currentTarget);
+  };
+  const HandleClose = () => {
+    setMenuOpen(false);
+    setMenuAnchor(null);
+  };
+
+  const handleLogout = () => {
+    HandleClose();
+    dispatch({ type: AUTH_LOGOUT });
+    navigate("/login");
+  };
+
+  const handleProfile=()=>{
+    navigate("/profiles");
+  }
+  const userInfo = useSelector((state: State) => (state.login as any)).signIn.userInfo;
+  console.log(userInfo);
+  const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
+  console.log(currentServer);
   //  modal setting server
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const open = Boolean(anchorEl)
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -109,8 +138,7 @@ function ServerInfo() {
             }
           }}
         >
-          {/* {currentServer.name} */}
-          Server TFT
+          {currentServer?.name || 'Loading...'}      
         </Button>
         <Menu
           id="fade-menu"
@@ -136,7 +164,7 @@ function ServerInfo() {
           <MenuItem
             onClick={() => {
               handleClose()
-              NiceModal.show(ServerSetting)
+              // NiceModal.show(ServerSetting)
             }}
           >
             <Stack width={190} direction="row" justifyContent="space-between">
@@ -213,6 +241,7 @@ function ServerInfo() {
               backgroundColor: colors.grey[800]
             }
           }}
+          onClick={HandleClick}
         >
           <Badge
             anchorOrigin={{
@@ -232,21 +261,29 @@ function ServerInfo() {
           </Badge>
           <Stack spacing={0.25}>
             <Typography variant="caption" fontWeight="bold">
-              Nam
+            {userInfo.username}
               {/* {userData?.fullname?.split(" ")[0]} */}
             </Typography>
             <Typography variant="caption" color="lightgray">
-              123123
+            #{userInfo?.id.slice(0, 6)}
               {/* #{userData?._id.slice(0, 6)} */}
             </Typography>
           </Stack>
         </Stack>
+        <Menu
+          anchorEl={menuAnchor}
+          open={menuOpen}
+          onClose={HandleClose}
+        >
+          <MenuItem onClick={handleProfile}>{userInfo.username} # {userInfo.id.slice(0, 6)}</MenuItem>
+          <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
+        </Menu>
 
         <Stack direction="row" p={0.5} spacing={0.5}>
           <IconButton
             color="default"
             size="small"
-            // onClick={() => dispatch(setOnMicrophone(!onMicrophone))}
+          // onClick={() => dispatch(setOnMicrophone(!onMicrophone))}
           >
             {/* {onMicrophone ? <MicIcon /> : <MicOffIcon />} */}
             <MicIcon />
@@ -255,7 +292,7 @@ function ServerInfo() {
           <IconButton
             color="default"
             size="small"
-            // onClick={() => dispatch(setOnCamera(!onCamera))}
+          // onClick={() => dispatch(setOnCamera(!onCamera))}
           >
             {/* {onCamera ? <CameraIcon /> : <CameraOffIcon />} */}
             <CameraIcon />

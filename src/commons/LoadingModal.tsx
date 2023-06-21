@@ -9,7 +9,7 @@ const LoadingModal = NiceModal.create(() => {
   return (
     <Dialog {...muiDialogV5(modal)}>
       <Container sx={{ position: "relative" }}>
-        <img src={Loading} alt="loading" />
+        {/* <img src={Loading} alt="loading" /> */}
       </Container>
     </Dialog>
   )

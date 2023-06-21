@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import {
   Button,
   TextField,
@@ -17,24 +17,39 @@ import * as yup from "yup"
 import { Link as LinkDom } from "react-router-dom"
 import { Formik } from "formik"
 import { RegisterForm } from "./interfaces"
+import { AUTH_REGISTER } from "../../redux-saga/actions"
+import { useSelector } from "react-redux"
+
+import { AuthState } from "../../redux-saga/type"
+import rootReducer, { State } from "../../redux-saga/reducers"
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup.string().required(),
-  passwordCfm: yup
+  repass: yup
     .string()
     .oneOf([yup.ref("password"), undefined], "Password must match"),
-  name: yup.string().required()
+  username: yup.string().required()
 })
 
 export default function Register() {
   const dispatch = useDispatch()
   const theme = useTheme()
+  const navigate = useNavigate();
 
   const handleSubmit = (values: RegisterForm) => {
     console.log(values)
-  }
+    dispatch({ type: AUTH_REGISTER, payload: values });
 
+    navigate("/login")
+  }
+  const username = useSelector((state: State) => (state.register as any).username);
+  console.log(username);
+
+
+
+  // const username = localStorage.getItem("username");
+  // console.log(username);
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -53,8 +68,8 @@ export default function Register() {
             {
               email: "",
               password: "",
-              passwordCfm: "",
-              name: ""
+              repass: "",
+              username: ""
             } as RegisterForm
           }
           onSubmit={handleSubmit}
@@ -72,10 +87,10 @@ export default function Register() {
                 margin="normal"
                 required
                 fullWidth
-                label="Full name"
-                onChange={handleChange("name")}
-                onBlur={handleBlur("name")}
-                value={values.name}
+                label="User name"
+                onChange={handleChange("username")}
+                onBlur={handleBlur("username")}
+                value={values.username}
                 autoFocus
               />
               <TextField
@@ -93,7 +108,7 @@ export default function Register() {
                 required
                 fullWidth
                 label="Password"
-                type="password"
+                type="string"
                 onChange={handleChange("password")}
                 onBlur={handleBlur("password")}
                 value={values.password}
@@ -105,9 +120,9 @@ export default function Register() {
                 fullWidth
                 label="Comfirm password"
                 type="password"
-                onChange={handleChange("passwordCfm")}
-                onBlur={handleBlur("passwordCfm")}
-                value={values.passwordCfm}
+                onChange={handleChange("repass")}
+                onBlur={handleBlur("repass")}
+                value={values.repass}
                 autoComplete="current-password"
               />
               <Button

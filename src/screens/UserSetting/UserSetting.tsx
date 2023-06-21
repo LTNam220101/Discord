@@ -12,13 +12,13 @@ import { UserSettingProps } from './UserSettingProps';
 import NiceModal, { muiDialogV5, useModal } from '@ebay/nice-modal-react';
 
 
-const UserSetting = /*NiceModal.create(*/() => {
+const UserSetting = NiceModal.create(() => {
   const theme = useTheme();
   const [index, setIndex] = React.useState<number>(0);
   const handleIndexTab = (index: number) => {
     setIndex(index);
   };
-  const modal = useModal("1");
+  const modal = useModal();
 
   return (
     <Dialog
@@ -58,7 +58,6 @@ const UserSetting = /*NiceModal.create(*/() => {
                   textAlign="center"
                 >
                   <IconButton onClick={() => modal.hide()}>
-                  {/* <IconButton> */}
                     <HighlightOffIcon fontSize="large" />
                   </IconButton>
                   <Typography color="grey"> ESC </Typography>
@@ -70,6 +69,7 @@ const UserSetting = /*NiceModal.create(*/() => {
       </Stack>
     </Dialog>
   );
-};
+}
+)
 
 export default UserSetting;

@@ -1,66 +1,57 @@
-import React, { useState } from "react"
-import { Stack, useTheme } from "@mui/material"
-import ServerItem from "../ServerItem"
-import AddServerBtn from "../AddServerBtn/AddServerOnColumn"
-
-const listJoinedServer = [
-  {
-    _id: 1,
-    name: "ABC",
-    avatarUrl: undefined
-  },
-  {
-    _id: 2,
-    name: "LTN",
-    avatarUrl: undefined
-  },
-  {
-    _id: 3,
-    name: "Nam",
-    avatarUrl: undefined
-  },
-  {
-    _id: 4,
-    name: "Server",
-    avatarUrl: undefined
-  },
-  {
-    _id: 5,
-    name: "TFT",
-    avatarUrl: undefined
-  }
-]
+import React, { useEffect } from "react";
+import { Stack, useTheme } from "@mui/material";
+import LazyLoadComponent from 'react-lazyload';
+import ServerItem from "../ServerItem";
+import AddServerBtn from "../AddServerBtn/AddServerOnColumn";
+import { useDispatch, useSelector } from "react-redux";
+import { State } from "../../redux-saga/reducers";
+import { LISTJOINSERVER } from "../../redux-saga/actions";
 
 const ServersList = () => {
-  const theme = useTheme()
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const listJoinedServer = useSelector(
+    (state: State) => state.createServer.listJoinedServer[0]?.response?.data
+  );
+  console.log(listJoinedServer)
+
+  useEffect(() => {
+    dispatch({ type: LISTJOINSERVER });
+  }, [dispatch]);
 
   return (
     <Stack
-      direction="column"
-      height="100%"
-      py={1}
-      spacing={2}
-      bgcolor="rgba(30,31,34,255)"
-    >
-      <ServerItem isDirect={true} name="Direct Messages" />
+  direction="column"
+  height="100%"
+  py={1}
+  spacing={2}
+  bgcolor="rgba(30,31,34,255)"
+>
+  <ServerItem isDirect={true} name="Direct Messages" />
 
-      {listJoinedServer.map((server) => (
+  {listJoinedServer &&
+  listJoinedServer.map((server: any) => (
+    <div key={server._id} style={{ height: "100px" }}>
+      <LazyLoadComponent>
         <ServerItem
-          key={server._id}
           serverId={server._id}
           name={server.name}
           imgUrl={
             server.avatarUrl ||
             `https://ui-avatars.com/api/?name=${server.name
-              .split(" ")
+              ?.split(" ")
               .join()}&background=313338&color=d6d9dc&font-size=0.33`
           }
         />
-      ))}
+      </LazyLoadComponent>
+    </div>
+  ))}
 
-      <AddServerBtn />
-    </Stack>
-  )
-}
 
-export default ServersList
+  <AddServerBtn />
+</Stack>
+
+  );
+};
+
+export default ServersList;

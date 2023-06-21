@@ -12,27 +12,37 @@ import {
   useTheme
 } from "@mui/material"
 import { ReactComponent as Discord } from "../../assets/discord.svg"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import * as yup from "yup"
 import { Link as LinkDom } from "react-router-dom"
 import { Formik } from "formik"
 import { LoginForm } from "./interfaces"
+import { AUTH_LOGIN } from "../../redux-saga/actions"
+import { AuthState } from "../../redux-saga/type"
+import { State } from "../../redux-saga/reducers"
+
 
 const schema = yup.object().shape({
-  email: yup.string().email().required(),
+  username: yup.string().required(),
   password: yup.string().required()
 })
 
 export default function LoginPage() {
+
   const dispatch = useDispatch()
   const theme = useTheme()
 
   const navigate = useNavigate()
 
   const handleSubmit = (values: LoginForm) => {
-    console.log(values)
-  }
-
+    dispatch({ type: AUTH_LOGIN, payload: values });
+    console.log(values);
+    navigate("/")
+  };
+  const username = useSelector((state: State) => (state.login as any).username);
+  console.log(username);
+  const userInfo = useSelector((state: State) => state.logout);
+  console.log(userInfo);
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -47,7 +57,7 @@ export default function LoginPage() {
         <Discord />
         <Formik
           validationSchema={schema}
-          initialValues={{ email: "", password: "" } as LoginForm}
+          initialValues={{ username: "", password: "" } as LoginForm}
           onSubmit={handleSubmit}
         >
           {({
@@ -63,11 +73,10 @@ export default function LoginPage() {
                 margin="normal"
                 required
                 fullWidth
-                label="Email address"
-                autoComplete="email"
-                onChange={handleChange("email")}
-                onBlur={handleBlur("email")}
-                value={values.email}
+                label="Username"
+                onChange={handleChange("username")}
+                onBlur={handleBlur("username")}
+                value={values.username}
                 autoFocus
               />
               <TextField
@@ -91,6 +100,7 @@ export default function LoginPage() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 disabled={!isValid}
+              // onClick={handleHome}
               >
                 Login
               </Button>
