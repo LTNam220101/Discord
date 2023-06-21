@@ -8,22 +8,21 @@ import { Stack } from '@mui/system';
 import { Dialog } from '@mui/material';
 import SidebarSetting from '../../components/SidebarSetting';
 import ContentSetting from '../../components/ContentSetting';
-import { UserSettingProps } from './UserSettingProps';
+import UserSettingProps from "./UserSettingProps.1";
 import NiceModal, { muiDialogV5, useModal } from '@ebay/nice-modal-react';
 
 
-const UserSetting = /*NiceModal.create(*/() => {
+const UserSetting = NiceModal.create(() => {
   const theme = useTheme();
   const [index, setIndex] = React.useState<number>(0);
   const handleIndexTab = (index: number) => {
     setIndex(index);
   };
-  const modal = useModal("1");
+  const modal = useModal();
 
   return (
     <Dialog
       {...muiDialogV5(modal)}
-      open={true}
       fullWidth
       maxWidth={false}
       sx={{ height: '100vh' }}
@@ -57,8 +56,9 @@ const UserSetting = /*NiceModal.create(*/() => {
                   position="absolute"
                   textAlign="center"
                 >
-                  <IconButton onClick={() => modal.hide()}>
-                  {/* <IconButton> */}
+
+                  <IconButton onClick={() => { modal.hide() }}>
+                    {/* <IconButton> */}
                     <HighlightOffIcon fontSize="large" />
                   </IconButton>
                   <Typography color="grey"> ESC </Typography>
@@ -70,6 +70,6 @@ const UserSetting = /*NiceModal.create(*/() => {
       </Stack>
     </Dialog>
   );
-};
+});
 
 export default UserSetting;

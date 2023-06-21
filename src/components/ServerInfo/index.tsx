@@ -34,6 +34,8 @@ import { Link as LinkDom } from "react-router-dom"
 import NiceModal from "@ebay/nice-modal-react"
 import UserSetting from "../../screens/UserSetting/UserSetting"
 import ServerSetting from "../../screens/ServerSetting/ServerSetting"
+import InviteDialog from "../Dialog/InviteDialog"
+import AddChannelDialog from "../AddServerBtn/AddChannelDialog"
 
 // const ChannelRow = ({ channel }) => {
 
@@ -125,7 +127,7 @@ function ServerInfo() {
           <MenuItem
             onClick={() => {
               handleClose()
-              // NiceModal.show(InviteDialog)
+              NiceModal.show(InviteDialog)
             }}
           >
             <Stack width={190} direction="row" justifyContent="space-between">
@@ -147,7 +149,7 @@ function ServerInfo() {
           <MenuItem
             onClick={() => {
               handleClose()
-              // NiceModal.show(AddChannelDialog)
+              NiceModal.show(AddChannelDialog)
             }}
           >
             <Stack width={190} direction="row" justifyContent="space-between">

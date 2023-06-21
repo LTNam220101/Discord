@@ -21,8 +21,9 @@ import { useDispatch } from 'react-redux';
 // import serverAPI from 'src/features/server/serverAPI';
 // import LoadingModal from 'src/commons/components/LoadingModal';
 import { toast } from 'react-toastify';
+import LoadingModal from '../../commons/LoadingModal';
 
-const AddServerDialog: React.FC = () => {
+const AddServerDialog = NiceModal.create(() => {
     const modal = useModal();
     const dispatch = useDispatch();
     const [nameServer, setNameServer] = useState<string | null>(null);
@@ -132,6 +133,6 @@ const AddServerDialog: React.FC = () => {
             </Container>
         </Dialog>
     );
-};
+});
 
 export default AddServerDialog;

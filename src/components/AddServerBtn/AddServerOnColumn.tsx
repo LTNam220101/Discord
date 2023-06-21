@@ -4,7 +4,7 @@ import * as colors from "@mui/material/colors"
 import NiceModal from "@ebay/nice-modal-react"
 import AddServerDialog from "./AddServerDialog"
 
-function AddServerBtn() {
+function AddServerOnColumn() {
   const theme = useTheme()
 
   const [isHover, setIsHover] = useState(false)
@@ -62,4 +62,4 @@ function AddServerBtn() {
   )
 }
 
-export default AddServerBtn
+export default AddServerOnColumn

@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import React, { useEffect } from 'react';
+import LoadingModal from '../commons/LoadingModal';
 // import serverAPI from 'src/features/server/serverAPI';
 // import LoadingModal from 'src/commons/components/LoadingModal';
 
@@ -20,19 +21,20 @@ interface ListUserChannelProps {
   channelId: string; // Type of channelId
 }
 
-const ListUserChannel: React.FC<ListUserChannelProps> = ({ channelId }) => {
-  const modal = useModal(channelId);
+const ListUserChannel = NiceModal.create(({ channelId }:{channelId:string}) => {
+  console.log(channelId);
+  const modal = useModal();
 
   const [channelDetail, setChannelDetail] = React.useState<any>(null);
 
-//   useEffect(() => {
-//     NiceModal.show(LoadingModal);
+  useEffect(() => {
+    // NiceModal.show(LoadingModal);
 
-//     serverAPI.getChannelInfo(channelId).then((res) => {
-//       setChannelDetail(res.data.data);
-//       NiceModal.hide(LoadingModal);
-//     });
-//   }, []);
+    // serverAPI.getChannelInfo(channelId).then((res) => {
+    //   setChannelDetail(res.data.data);
+    //   NiceModal.hide(LoadingModal);
+    // });
+  }, []);
 
   return (
     <Dialog {...muiDialogV5(modal)}>
@@ -86,6 +88,6 @@ const ListUserChannel: React.FC<ListUserChannelProps> = ({ channelId }) => {
       )}
     </Dialog>
   );
-};
+});
 
 export default ListUserChannel;
