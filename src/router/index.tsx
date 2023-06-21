@@ -90,7 +90,7 @@ const Router = () => {
               <Route path="" element={<Home />} />
               <Route path="/channels/:serverId" element={<Home />} />
               <Route path="/channels/:serverId/:channelId" element={<Home />} />
-              <Route path="/setting" element={<UserSetting />} />
+              <Route path="/setting" element={<UserSetting id={""} />} />
 
               {/* Thêm route mới ở đây vd /channels/:serverId, /channels/:serverId/:channelId, /setting */}
               {/* <Route path="" element={<Home />} />

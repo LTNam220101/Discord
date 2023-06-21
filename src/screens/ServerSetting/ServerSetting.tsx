@@ -15,18 +15,17 @@ import SidebarServer from '../../components/ServerSetting/SidebarServer';
 import ContentSettingServer from '../../components/ServerSetting/ContentSettingServer';
 import { Home } from '@mui/icons-material';
 
-const ServerSetting: React.FC = () => {
+const ServerSetting = NiceModal.create(() => {
     const theme = useTheme();
     const [index, setIndex] = React.useState(0);
     const handleIndexTab = (index: number) => {
         setIndex(index);
     };
-    const modal = useModal("1");
+    const modal = useModal();
 
     return (
         <Dialog
             {...muiDialogV5(modal)}
-            open
             fullWidth
             maxWidth={false}
             sx={{ height: '100vh' }}
@@ -74,6 +73,6 @@ const ServerSetting: React.FC = () => {
             </Stack>
         </Dialog>
     );
-};
+});
 
 export default ServerSetting;

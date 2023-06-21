@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
+// import { VideoProps } from './VideoInterface';
+import { StreamOptions } from 'stream';
+import { VideoProps } from './VideoInterface';
 
-interface VideoProps {
-  stream: MediaStream;
-}
 
 const Video: React.FC<VideoProps> = ({ stream, ...rest }) => {
   const videoRef = useRef<HTMLVideoElement>(null);

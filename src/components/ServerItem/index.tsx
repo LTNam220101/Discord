@@ -14,6 +14,8 @@ import { useNavigate } from "react-router"
 import { ServerItemProps } from "./ServerItemProps"
 import NiceModal from "@ebay/nice-modal-react"
 import ServerSettingDialog from "../ServerSetting/ServerSettingDialog"
+import CreateInvitationDialog from "../Dialog/CreateInvitationDialog"
+import AddChannelDialog from "../AddServerBtn/AddChannelDialog"
 
 function ServerItem({
   isDirect = false,
@@ -81,7 +83,7 @@ function ServerItem({
         </MenuItem>
         <MenuItem
           onClick={() => {
-            // NiceModal.show(CreateInvitationDialog, { serverId })
+            NiceModal.show(CreateInvitationDialog, /*{ serverId }*/)
           }}
         >
           Create invitation
@@ -89,7 +91,7 @@ function ServerItem({
         <MenuItem
           onClick={() => {
             // dispatch(getServerInfoAction(serverId))
-            // NiceModal.show(AddChannelDialog, { serverId })
+            NiceModal.show(AddChannelDialog, /*{ serverId }*/)
           }}
         >
           Add channel

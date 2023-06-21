@@ -192,7 +192,7 @@ const _mockRoles_: Role[] = [
     },
 ];
 
-const ServerSettingDialog = () => {
+const ServerSettingDialog = NiceModal.create(() => {
     const modal = useModal();
 
     const dispatch = useDispatch();
@@ -415,6 +415,6 @@ const ServerSettingDialog = () => {
             </Box>
         </Dialog>
     );
-};
+});
 
 export default ServerSettingDialog;
