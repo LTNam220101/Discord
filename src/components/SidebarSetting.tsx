@@ -10,6 +10,7 @@ import { State } from "../redux-saga/reducers"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { LOGIN_CLEAR } from "../screens/Login/reducers"
+import { LOGOUT_CLEAR } from "../screens/UserSetting/reducers"
 
 function SidebarSetting(props: any) {
   const dispatch = useDispatch()
@@ -20,11 +21,15 @@ function SidebarSetting(props: any) {
   useEffect(() => {
     if (logoutResult) {
       if (logoutResult.success) {
+        props.modal.hide()
         localStorage.removeItem("accessToken")
         localStorage.removeItem("refreshToken")
         localStorage.removeItem("id")
         dispatch({
           type: LOGIN_CLEAR
+        })
+        dispatch({
+          type: LOGOUT_CLEAR
         })
         navigate("/login")
       }

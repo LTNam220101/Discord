@@ -1,31 +1,30 @@
-import * as React from 'react';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { Grid, colors, IconButton, useTheme } from '@mui/material';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { Stack } from '@mui/system';
+import * as React from "react"
+import Typography from "@mui/material/Typography"
+import Box from "@mui/material/Box"
+import { Grid, colors, IconButton, useTheme } from "@mui/material"
+import HighlightOffIcon from "@mui/icons-material/HighlightOff"
+import { Stack } from "@mui/system"
 // import ContentSetting from './components/ContentSetting';
-import { Dialog } from '@mui/material';
-import SidebarSetting from '../../components/SidebarSetting';
-import ContentSetting from '../../components/ContentSetting';
-import UserSettingProps from "./UserSettingProps.1";
-import NiceModal, { muiDialogV5, useModal } from '@ebay/nice-modal-react';
-
+import { Dialog } from "@mui/material"
+import SidebarSetting from "../../components/SidebarSetting"
+import ContentSetting from "../../components/ContentSetting"
+import UserSettingProps from "./UserSettingProps.1"
+import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react"
 
 const UserSetting = NiceModal.create(() => {
-  const theme = useTheme();
-  const [index, setIndex] = React.useState<number>(0);
+  const theme = useTheme()
+  const [index, setIndex] = React.useState<number>(0)
   const handleIndexTab = (index: number) => {
-    setIndex(index);
-  };
-  const modal = useModal();
+    setIndex(index)
+  }
+  const modal = useModal()
 
   return (
     <Dialog
       {...muiDialogV5(modal)}
       fullWidth
       maxWidth={false}
-      sx={{ height: '100vh' }}
+      sx={{ height: "100vh" }}
     >
       <Stack minWidth={1000}>
         <Grid direction="row" container height="92vh">
@@ -34,14 +33,14 @@ const UserSetting = NiceModal.create(() => {
             xs={3.5}
             sx={{ color: colors.grey[100], backgroundColor: colors.grey[900] }}
           >
-            <SidebarSetting handleIndexTab={handleIndexTab} />
+            <SidebarSetting handleIndexTab={handleIndexTab} modal={modal} />
           </Grid>
           <Grid
             item
             xs={8.5}
             sx={{
               color: colors.grey[100],
-              bgcolor: theme.palette.grey[800],
+              bgcolor: theme.palette.grey[800]
             }}
           >
             <Stack flexDirection="row">
@@ -56,8 +55,11 @@ const UserSetting = NiceModal.create(() => {
                   position="absolute"
                   textAlign="center"
                 >
-
-                  <IconButton onClick={() => { modal.hide() }}>
+                  <IconButton
+                    onClick={() => {
+                      modal.hide()
+                    }}
+                  >
                     {/* <IconButton> */}
                     <HighlightOffIcon fontSize="large" />
                   </IconButton>
@@ -69,7 +71,7 @@ const UserSetting = NiceModal.create(() => {
         </Grid>
       </Stack>
     </Dialog>
-  );
-});
+  )
+})
 
-export default UserSetting;
+export default UserSetting
