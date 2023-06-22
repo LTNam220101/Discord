@@ -18,7 +18,7 @@ import * as yup from "yup"
 import { Link as LinkDom } from "react-router-dom"
 import { ErrorMessage, Formik } from "formik"
 import { RegisterForm } from "./interfaces"
-import { register } from "./actions"
+import { register } from "../../redux-saga/reducers/Authen/SignUp/actions"
 import { State } from "../../redux-saga/reducers"
 
 const schema = yup.object().shape({
@@ -32,7 +32,7 @@ const schema = yup.object().shape({
 
 export default function Register({ user }: any) {
   if (user) {
-    return <Navigate to={'/'} replace />
+    return <Navigate to={"/"} replace />
   }
   const theme = useTheme()
 
@@ -94,10 +94,10 @@ export default function Register({ user }: any) {
                 margin="normal"
                 required
                 fullWidth
-                label="Full name"
-                onChange={handleChange("name")}
-                onBlur={handleBlur("name")}
-                value={values.name}
+                label="User name"
+                onChange={handleChange("username")}
+                onBlur={handleBlur("username")}
+                value={values.username}
                 autoFocus
               /> */}
               {err && <Alert severity="error">{err}</Alert>}
@@ -116,7 +116,7 @@ export default function Register({ user }: any) {
                 required
                 fullWidth
                 label="Password"
-                type="password"
+                type="string"
                 onChange={handleChange("password")}
                 onBlur={handleBlur("password")}
                 value={values.password}

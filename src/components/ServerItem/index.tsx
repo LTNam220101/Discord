@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { FC, useState } from "react"
 import {
   Box,
   Stack,
@@ -13,8 +13,13 @@ import PeopleAltTwoTone from "@mui/icons-material/PeopleAltTwoTone"
 import { useNavigate } from "react-router"
 import { ServerItemProps } from "./ServerItemProps"
 import NiceModal from "@ebay/nice-modal-react"
+
+// import CreateInvitationDialog from "../CreateInvitationDialog"
+import { useDispatch, useSelector } from "react-redux"
+import { DELETE_SERVER, GET_SERVER_INFO } from "../../redux-saga/actions"
+import { State } from "../../redux-saga/reducers"
+import CreateInvitationDialog from "../CreateInvitationDialog"
 import ServerSettingDialog from "../ServerSetting/ServerSettingDialog"
-import CreateInvitationDialog from "../Dialog/CreateInvitationDialog"
 import AddChannelDialog from "../AddServerBtn/AddChannelDialog"
 
 function ServerItem({
@@ -23,6 +28,7 @@ function ServerItem({
   name,
   imgUrl
 }: ServerItemProps) {
+  const dispatch = useDispatch()
   const theme = useTheme()
   const navigate = useNavigate()
   // get this from server
@@ -38,7 +44,18 @@ function ServerItem({
     setIsHover(true)
     setAnchorEl(event.currentTarget)
   }
-
+  const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
+  const listJoinedServer = useSelector(
+    (state: State) => state.createServer.listJoinedServer[0]?.response?.data
+  );
+  console.log(listJoinedServer)
+  if (currentServer) {
+    // Truy cập vào các thuộc tính của currentServer
+    console.log(currentServer);
+  } else {
+    console.log("currentServer is undefined");
+  }
+  
   return (
     <Stack
       width="100%"
@@ -48,7 +65,9 @@ function ServerItem({
       justifyContent="space-between"
       alignItems="center"
       onClick={() => {
-        navigate(`/channels/${serverId}`)
+        navigate(`/channels/${serverId}`);
+        dispatch({type:GET_SERVER_INFO,payload:{id:serverId,listJoinedServer:listJoinedServer}})
+        console.log(serverId)
       }}
       onContextMenu={(e) => {
         e.preventDefault()
@@ -95,6 +114,14 @@ function ServerItem({
           }}
         >
           Add channel
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            dispatch({type:DELETE_SERVER,payload:{serverId:serverId}})
+            // NiceModal.show(AddChannelDialog, { serverId })
+          }}
+        >
+          Delete Server
         </MenuItem>
       </Menu>
       <Box

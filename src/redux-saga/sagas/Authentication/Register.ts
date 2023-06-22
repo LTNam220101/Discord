@@ -9,7 +9,8 @@ function register(payload: Record<string, unknown>) {
   return axios.post(signupUrl, payload)
 }
 
-function* doRegister(request: Request<Record<string, unknown>>): any {
+function* doRegister(request: Request<{ email: string, password: string, username: string, repass: string }>): any {
+  
   try {
     const response = yield call(register, request.payload!)
     yield put({
@@ -33,6 +34,7 @@ function* doRegister(request: Request<Record<string, unknown>>): any {
     })
   }
 }
+
 
 export default function* watchRegister() {
   yield takeLatest(AUTH_REGISTER, doRegister)

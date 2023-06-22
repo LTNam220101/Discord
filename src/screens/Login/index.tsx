@@ -18,8 +18,7 @@ import { Link as LinkDom } from "react-router-dom"
 import { LoginForm } from "./interfaces"
 import { State } from "../../redux-saga/reducers"
 import { useEffect, useState } from "react"
-import { LOGIN_CLEAR } from "./reducers"
-import { login } from "./actions"
+import { login } from "../../redux-saga/reducers/Authen/SignIn/actions"
 import { Formik } from "formik"
 
 const schema = yup.object().shape({
@@ -39,11 +38,6 @@ export default function LoginPage({ user }: any) {
     if (user) {
       navigate("/")
     }
-    // return () => {
-    //   dispatch({
-    //     type: LOGIN_CLEAR
-    //   })
-    // }
   }, [user])
 
   useEffect(() => {
@@ -58,7 +52,6 @@ export default function LoginPage({ user }: any) {
           loginResult.response?.refreshToken as string
         )
         localStorage.setItem("id", loginResult.response?.id as string)
-        // navigate("/")
       } else {
         setErr(true)
       }
@@ -128,6 +121,7 @@ export default function LoginPage({ user }: any) {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 disabled={!isValid}
+              // onClick={handleHome}
               >
                 Login
               </Button>

@@ -43,6 +43,8 @@ import { useDispatch, useSelector } from 'react-redux';
 //     updateServerAction,
 // } from 'src/features/server/serverSlice';
 import { A11yProps, Role, TabPanelProps } from './ServerInterface';
+import { State } from '../../redux-saga/reducers';
+import CreateRole from './CreateRole';
 
 
 function TabPanel(props: TabPanelProps) {
@@ -197,9 +199,10 @@ const ServerSettingDialog = NiceModal.create(() => {
 
     const dispatch = useDispatch();
     // const currentServer = useSelector(selectCurrentServer);
-
+    const currentServer = useSelector((state: State) => state.createServer.currentServer);
+    console.log(currentServer);
     const [currentTab, setCurrentTab] = useState(0);
-    // const [serverName, setServerName] = useState(currentServer.name);
+    const [serverName, setServerName] = useState(currentServer.name);
 
     // const updateServer = (data: Partial<Server>) => {
     //     dispatch(updateServerAction({ id: currentServer._id, data }));
@@ -270,13 +273,13 @@ const ServerSettingDialog = NiceModal.create(() => {
                                     <TextField
                                         size="small"
                                         label="Server name"
-                                        // value={serverName}
-                                        // onChange={(event) => setServerName(event.target.value)}
+                                        value={serverName}
+                                        onChange={(event) => setServerName(event.target.value)}
                                     />
                                     <Button
                                         variant="contained"
-                                        // disabled={serverName === currentServer.name}
-                                        // onClick={() => updateServer({ name: serverName })}
+                                        disabled={serverName === currentServer.name}
+                                    // onClick={() => updateServer({ name: serverName })}
                                     >
                                         Save
                                     </Button>
@@ -309,7 +312,9 @@ const ServerSettingDialog = NiceModal.create(() => {
                                         label="Search role"
                                     />
                                 </FormControl>
-                                <Button variant="outlined">Create role</Button>
+                                <Button variant="outlined" onClick={() => {
+                                    NiceModal.show(CreateRole);
+                                }}>Create role</Button>
                             </Box>
 
                             {_mockRoles_.map((role, index) => (
@@ -393,20 +398,20 @@ const ServerSettingDialog = NiceModal.create(() => {
 
                             <List>
                                 {/* {currentServer.members.map((user, index) => ( */}
-                                    <ListItem /*key={index}*/>
-                                        <ListItemAvatar>
-                                            <Avatar /*alt={user?.fullname} src={user.avatarUrl}*/ />
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            // primary={user?.fullname}
-                                            // secondary={user?.email}
-                                        />
-                                        <ListItemSecondaryAction>
-                                            <IconButton edge="end" aria-label="delete">
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
+                                <ListItem /*key={index}*/>
+                                    <ListItemAvatar>
+                                        <Avatar /*alt={user?.fullname} src={user.avatarUrl}*/ />
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                    // primary={user?.fullname}
+                                    // secondary={user?.email}
+                                    />
+                                    <ListItemSecondaryAction>
+                                        <IconButton edge="end" aria-label="delete">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
                                 {/* ))} */}
                             </List>
                         </TabPanel>

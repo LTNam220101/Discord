@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Container, Dialog } from "@mui/material"
-// import { ReactComponent as Loading } from "../../assets/loading.svg"
-import LoadingSvg from 'src/assets/images/loading.svg';
+import { ReactComponent as Loading } from "../assets/loading.svg"
+// import LoadingSvg from 'src/assets/images/loading.svg';
 import NiceModal, { useModal, muiDialogV5 } from "@ebay/nice-modal-react"
 
 const LoadingModal = NiceModal.create(() => {
@@ -10,7 +10,7 @@ const LoadingModal = NiceModal.create(() => {
   return (
     <Dialog {...muiDialogV5(modal)}>
       <Container sx={{ position: "relative" }}>
-        <img src={LoadingSvg} alt="loading" />
+        <img src={Loading} alt="loading" />
       </Container>
     </Dialog>
   )
