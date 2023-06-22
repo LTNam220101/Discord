@@ -34,7 +34,9 @@ const Home = () => {
   //     })
   //   }
   // }
-
+  const loginResult=useSelector((state:State)=>state.loginResult)
+  console.log(loginResult)
+  const idLoginResult=loginResult?.response?.id
   return (
     <>
       <Helmet>

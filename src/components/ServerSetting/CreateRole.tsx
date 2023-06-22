@@ -11,12 +11,12 @@ const CreateRole = NiceModal.create(() => {
     const dispatch = useDispatch()
     const [userId, setUserId] = useState('');
     const [RoleId, setRoleId] = useState('');
-    const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
-    console.log(currentServer);
+    // const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
+    // console.log(currentServer);
     const handleAddRole = () => {
-        if (currentServer && userId && RoleId) {
-            dispatch({ type: ADD_USER_TO_SERVER_ROLE, payload: { userId: userId, serverId: currentServer._id, RoleId: RoleId } })
-        }
+        // if (currentServer && userId && RoleId) {
+        //     dispatch({ type: ADD_USER_TO_SERVER_ROLE, payload: { userId: userId, serverId: currentServer._id, RoleId: RoleId } })
+        // }
     }
     return (
         <Dialog fullScreen {...muiDialogV5(modal)}>

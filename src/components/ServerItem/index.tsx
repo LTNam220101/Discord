@@ -21,6 +21,7 @@ import { State } from "../../redux-saga/reducers"
 import CreateInvitationDialog from "../CreateInvitationDialog"
 import ServerSettingDialog from "../ServerSetting/ServerSettingDialog"
 import AddChannelDialog from "../AddServerBtn/AddChannelDialog"
+import { getServerInfo } from "../../redux-saga/reducers/Server/GetServerById/actions"
 
 function ServerItem({
   isDirect = false,
@@ -44,18 +45,26 @@ function ServerItem({
     setIsHover(true)
     setAnchorEl(event.currentTarget)
   }
-  const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
-  const listJoinedServer = useSelector(
-    (state: State) => state.createServer.listJoinedServer[0]?.response?.data
-  );
-  console.log(listJoinedServer)
-  if (currentServer) {
-    // Truy cập vào các thuộc tính của currentServer
-    console.log(currentServer);
-  } else {
-    console.log("currentServer is undefined");
-  }
-  
+  // const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
+  // const listJoinedServer = useSelector(
+  //   (state: State) => state.createServer.listJoinedServer[0]?.response?.data
+  // );
+  // console.log(listJoinedServer)
+  // if (currentServer) {
+  //   // Truy cập vào các thuộc tính của currentServer
+  //   console.log(currentServer);
+  // } else {
+  //   console.log("currentServer is undefined");
+  // }
+  const getServerInfor = useSelector((state: State) => state.getServerByIdResult)
+  console.log(getServerInfor)
+  const ownerId = getServerInfor?.response?.ownerId;
+  const loginResult = useSelector((state: State) => state.loginResult)
+  console.log(loginResult)
+  const idLoginResult = loginResult?.response?.id
+  if (ownerId === idLoginResult) {
+    // dispatch(addUserToServerRole({ server: serverId, role:}))
+  } 
   return (
     <Stack
       width="100%"
@@ -66,7 +75,7 @@ function ServerItem({
       alignItems="center"
       onClick={() => {
         navigate(`/channels/${serverId}`);
-        dispatch({type:GET_SERVER_INFO,payload:{id:serverId,listJoinedServer:listJoinedServer}})
+        dispatch(getServerInfo({ serverId }))
         console.log(serverId)
       }}
       onContextMenu={(e) => {
@@ -75,12 +84,13 @@ function ServerItem({
         setContextMenu(
           contextMenu === null
             ? {
-                mouseX: e.clientX + 2,
-                mouseY: e.clientY - 6
-              }
+              mouseX: e.clientX + 2,
+              mouseY: e.clientY - 6
+            }
             : null
         )
       }}
+
     >
       <Menu
         open={contextMenu !== null}
@@ -117,7 +127,7 @@ function ServerItem({
         </MenuItem>
         <MenuItem
           onClick={() => {
-            dispatch({type:DELETE_SERVER,payload:{serverId:serverId}})
+            dispatch({ type: DELETE_SERVER, payload: { serverId: serverId } })
             // NiceModal.show(AddChannelDialog, { serverId })
           }}
         >

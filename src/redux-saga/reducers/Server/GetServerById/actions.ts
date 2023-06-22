@@ -1,15 +1,16 @@
-import { UPDATE_SERVER_FAILED, UPDATE_SERVER_SUCCESS } from './reducers';
-import { UPDATE_SERVER } from '../../../actions';
-import { RegisterForm } from '../../../../screens/Register/interfaces';
 
-export const updateServer = (payload: any, componentId?: string) => ({
-  type: UPDATE_SERVER,
+import { GET_SERVER_INFO, UPDATE_SERVER } from '../../../actions';
+import { RegisterForm } from '../../../../screens/Register/interfaces';
+import { GET_SERVER_INFO_FAILED, GET_SERVER_INFO_SUCCESS } from './reducers';
+
+export const getServerInfo = (payload: {serverId:any}, componentId?: string) => ({
+  type: GET_SERVER_INFO,
   response: {
     success: {
-      type: UPDATE_SERVER_SUCCESS,
+      type: GET_SERVER_INFO_SUCCESS,
     },
     failure: {
-      type: UPDATE_SERVER_FAILED,
+      type: GET_SERVER_INFO_FAILED,
     },
   },
   payload,

@@ -199,8 +199,9 @@ const ServerSettingDialog = NiceModal.create(() => {
 
     const dispatch = useDispatch();
     // const currentServer = useSelector(selectCurrentServer);
-    const currentServer = useSelector((state: State) => state.createServer.currentServer);
-    console.log(currentServer);
+    const getServerInfor = useSelector((state: State) => state.getServerByIdResult)
+  console.log(getServerInfor)
+  const  currentServer:any= getServerInfor?.response;
     const [currentTab, setCurrentTab] = useState(0);
     const [serverName, setServerName] = useState(currentServer.name);
 
