@@ -1,0 +1,11 @@
+import { createReducer } from "../../../../utils/redux";
+
+export const REQUEST_TO_JOIN_SERVER_SUCCESS = 'REQUEST_TO_JOIN_SERVER_SUCCESS';
+export const REQUEST_TO_JOIN_SERVER_FAILED = 'REQUEST_TO_JOIN_SERVER_FAILED';
+export const REQUEST_TO_JOIN_SERVER_CLEAR = 'REQUEST_TO_JOIN_SERVER_CLEAR';
+
+export const requestToJoinServerResult = createReducer(
+  REQUEST_TO_JOIN_SERVER_SUCCESS,
+  REQUEST_TO_JOIN_SERVER_FAILED,
+  REQUEST_TO_JOIN_SERVER_CLEAR
+);

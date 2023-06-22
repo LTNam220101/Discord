@@ -5,7 +5,7 @@ import { Stack } from "@mui/system"
 import LogoutIcon from "@mui/icons-material/Logout"
 import { useDispatch, useSelector } from "react-redux"
 // import { logout } from 'src/features/authen/authenSlice';
-import { logout } from "./../screens/UserSetting/actions"
+import { logout } from "../redux-saga/reducers/Authen/SignOut/actions"
 import { State } from "../redux-saga/reducers"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"

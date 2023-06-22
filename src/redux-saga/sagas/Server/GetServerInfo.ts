@@ -1,65 +1,39 @@
-import { getServerInfoSuccess, getServerInfoFailure, GET_SERVER_INFO } from './../../actions';
-import axios from '../BaseApi';
-import { put, takeLatest, call } from "redux-saga/effects";
-import { LISTJOINSERVER, listJoinedServerFailure, listJoinedServerSuccess, signinFailure } from "../../actions";
-import { Request } from '../../../interfaces';
-import instance from '../Base';
-import initialState from './reducers';
+import axios from "../BaseApi"
+import { put, takeLatest, call } from "redux-saga/effects"
+import { GET_SERVER_INFO } from "./../../actions"
+import { Request } from "../../../interfaces"
 
-const signupUrl = `/auth/sign-in`;
+const getServerInfoUrl = (serverId: any) => `/server/${serverId}`
 
-const getServerInfo = async (payload:{id:string}) => {
-    try {
-      const { data } = await instance.get(`/server/${payload.id}`);
-  
-      // Lưu danh sách server vào localStorage
-      saveListJoinedServerToLocalStorage(data);
-        
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-  
-  // Hàm lưu danh sách server vào localStorage
-  const saveListJoinedServerToLocalStorage = (currentServer:any) => {
-    const storedState = localStorage.getItem("initialState");
-    const parsedState = storedState ? JSON.parse(storedState) : {};
-  
-    const updatedState = {
-      ...parsedState,
-      currentServer,
-    };
-  
-    localStorage.setItem("initialState", JSON.stringify(updatedState));
-  };
-  
-function* doGetServerInfo(request: Request<{id:string }>): any {
-    try {
-        if (request.payload) {
+function getServerInfo(payload: Record<string, unknown>) {
+  return axios.get(getServerInfoUrl(payload.serverId))
+}
 
-            const response = yield call(getServerInfo, { id: request.payload?.id as string });
-            console.log(response)
-            yield put(
-                getServerInfoSuccess({
-                    response,
-                })
-            );
-
-            // localStorage.setItem('accessToken',response.accessToken);
-
-        }
-    } catch (e: any) {
-        yield put(
-            getServerInfoFailure({
-                error: e.message,
-            })
-        );
-    }
+function* doGetServerInfo(request: Request<Record<string, unknown>>): any {
+  try {
+    const response = yield call(getServerInfo, request.payload!)
+    yield put({
+      type: request.response?.success?.type,
+      payload: {
+        request: request.payload,
+        componentId: request.componentId,
+        response: response.data
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    yield put({
+      type: request.response?.failure?.type,
+      loading: false,
+      payload: {
+        request: request.payload,
+        componentId: request.componentId,
+        response: (error as any).response?.data
+      }
+    })
+  }
 }
 
 export default function* watchGetServerInfo() {
-    yield takeLatest(GET_SERVER_INFO, doGetServerInfo);
+  yield takeLatest(GET_SERVER_INFO, doGetServerInfo)
 }

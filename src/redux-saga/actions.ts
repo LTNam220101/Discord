@@ -1,101 +1,43 @@
-
 export const AUTH_LOGIN = "AUTH_LOGIN"
 export const AUTH_REGISTER = "AUTH_REGISTER"
 export const AUTH_LOGOUT = "AUTH_LOGOUT"
-export const SIGNUP_FAILURE = "SIGNUP_FAILURE"
-export const SIGNUP_SUCCESS = "AUTH_SUCCESS"
-export const SIGNIN_SUCCESS = "SIGNIN_SUCCESS"
-export const SIGNIN_FAILURE = "SIGNIN_FAILURE"
-export const LOGOUT_FAILURE = "LOGOUT_FAILURE"
-export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS"
-export const CREATESERVER = "CREATESERVER"
-export const CREATESERVER_SUCCESS = "CREATESERVER_SUCCESS"
-export const CREATESERVER_FAILURE = "CREATESERVER_FAILURE"
-export const LISTJOINSERVER = "LISTJOINSERVER"
-export const LISTJOINSERVER_SUCCESS = "LISTJOINSERVER_SUCCESS"
-export const LISTJOINSERVER_FAILURE = "LISTJOINSERVER_FAILURE"
+
+export const CREATE_SERVER = "CREATE_SERVER"
 export const UPDATE_SERVER = "UPDATE_SERVER"
-export const UPDATESERVER_SUCCESS = "UPDATESERVER_SUCCESS"      
-export const UPDATESERVER_FAILURE = "UPDATESERVER_FAILURE"
 export const DELETE_SERVER = "DELETE_SERVER"
-export const DELETESERVER_SUCCESS = "DELETESERVER_SUCCESS"      
-export const DELETESERVER_FAILURE = "DELETESERVER_FAILURE"
-export const GET_SERVER_INFO = "GET_SERVER_INFO "
-export const GETSERVERINFO_SUCCESS = "GETSERVERINFO_SUCCESS"      
-export const GETSERVERINFO_FAILURE = "GETSERVERINFO_SUCCESS"
+export const GET_SERVER_INFO = "GET_SERVER_INFO"
+export const RESPONSE_REQUEST = "RESPONSE_REQUEST"
+export const GET_LIST_SERVER_JOINED = "GET_LIST_SERVER_JOINED"
+export const GET_SERVERS_PUBLIC = "GET_SERVERS_PUBLIC"
+export const KICK_USER = "KICK_USER"
+
 export const ADD_USER_TO_SERVER_ROLE = "ADD_USER_TO_SERVER_ROLE"
-export const ADD_USER_TO_SERVER_ROLE_SUCCESS = "ADD_USER_TO_SERVER_ROLE_SUCCESS"      
-export const ADD_USER_TO_SERVER_ROLE_FAILURE = "ADD_USER_TO_SERVER_ROLE_FAILURE"
-// template: ACTION_TEMP = "ACTION_TEMP
-export const signupSuccess = (payload: Record<string, unknown>) => ({
-    type: SIGNUP_SUCCESS,
-    payload
-})
-export const signupFailure = (payload: Record<string, unknown>) => ({
-    type: SIGNUP_FAILURE,
-    payload
-})
-export const signinSuccess = (payload: Record<string, unknown>) => ({
-    type: SIGNIN_SUCCESS,
-    payload
-})
-export const signinFailure = (payload: Record<string, unknown>) => ({
-    type: SIGNIN_FAILURE,
-    payload
-})
-export const logoutSuccess = (payload: Record<string, unknown>) => ({
-    type: LOGOUT_SUCCESS,
-    payload
-})
-export const logoutFailure = (payload: Record<string, unknown>) => ({
-    type: LOGOUT_FAILURE,
-    payload
-})
-export const createServerSuccess = (payload: Record<string, unknown>) => ({
-    type: CREATESERVER_SUCCESS,
-    payload
-})
-export const createServerFailure = (payload: Record<string, unknown>) => ({
-    type: CREATESERVER_FAILURE,
-    payload
-})
-export const listJoinedServerSuccess = (payload: Record<string, unknown>) => ({
-    type: CREATESERVER_SUCCESS,
-    payload
-})
-export const listJoinedServerFailure = (payload: Record<string, unknown>) => ({
-    type: CREATESERVER_FAILURE,
-    payload
-})
-export const updateServerSuccess = (payload: Record<string, unknown>) => ({
-    type: UPDATESERVER_SUCCESS,
-    payload
-})
-export const updateServerFailure = (payload: Record<string, unknown>) => ({
-    type: UPDATESERVER_FAILURE,
-    payload
-})
-export const getServerInfoSuccess = (payload: Record<string, unknown>) => ({
-    type: GETSERVERINFO_SUCCESS,
-    payload
-})
-export const getServerInfoFailure = (payload: Record<string, unknown>) => ({
-    type: GETSERVERINFO_FAILURE,
-    payload
-})
-export const deleteServerSuccess = (payload: Record<string, unknown>) => ({
-    type: DELETESERVER_SUCCESS,
-    payload
-})
-export const deleteServerFailure = (payload: Record<string, unknown>) => ({
-    type: DELETESERVER_FAILURE,
-    payload
-})
-export const addUserToServerRoleSuccess = (payload: Record<string, unknown>) => ({
-    type: ADD_USER_TO_SERVER_ROLE_SUCCESS,
-    payload
-})
-export const addUserToServerFailure = (payload: Record<string, unknown>) => ({
-    type: ADD_USER_TO_SERVER_ROLE_FAILURE,
-    payload
-})
+export const CREATE_SERVER_ROLE = "CREATE_ROLE_SERVER_ROLE"
+export const GET_ALL_SERVER_ROLES = "GET_ALL_SERVER_ROLES"
+export const GET_SERVER_ROLE = "GET_SERVER_ROLE"
+export const DELETE_SERVER_ROLE = "DELETE_SERVER_ROLE"
+export const GET_ALL_USER_BELONG_TO_ROLE = "GET_ALL_USER_BELONG_TO_ROLE"
+export const GET_ALL_USER_NOT_BELONG_TO_ROLE = "GET_ALL_USER_NOT_BELONG_TO_ROLE"
+export const GET_DETAIL_USER_ROLE_IN_SERVER = "GET_DETAIL_USER_ROLE_IN_SERVER"
+export const REMOVE_USER_FROM_SERVER_ROLE = "REMOVE_USER_FROM_SERVER_ROLE"
+export const UPDATE_SERVER_ROLE = "UPDATE_SERVER_ROLE"
+
+export const GET_USER = "GET_USER"
+export const JOIN_WITH_LINK = "JOIN_WITH_LINK"
+export const REQUEST_TO_JOIN_SERVER = "REQUEST_TO_JOIN_SERVER"
+
+export const CREATE_INVITE = "CREATE_INVITE"
+
+export const SEND_MESSAGE = "SEND_MESSAGE"
+export const GET_ALL_MESSAGE = "GET_ALL_MESSAGE"
+
+export const CREATE_CHANNEL = "CREATE_CHANNEL"
+export const UPDATE_CHANNEL = "UPDATE_CHANNEL"
+export const DELETE_CHANNEL = "DELETE_CHANNEL"
+export const GET_CHANNEL_INFO = "GET_CHANNEL_INFO"
+export const GET_ALL_CHANNEL_BY_SERVER = "GET_ALL_CHANNEL_BY_SERVER"
+
+export const CREATE_CHANNEL_ROLE = "CREATE_CHANNEL_ROLE"
+export const UPDATE_CHANNEL_ROLE = "UPDATE_CHANNEL_ROLE"
+export const DELETE_CHANNEL_ROLE = "DELETE_CHANNEL_ROLE"
+export const GET_CHANNEL_ROLE_INFO = "GET_CHANNEL_ROLE_INFO"

@@ -1,64 +1,39 @@
-import axios from '../BaseApi';
-import { put, takeLatest, call } from "redux-saga/effects";
-import { LISTJOINSERVER, listJoinedServerFailure, listJoinedServerSuccess, signinFailure } from "../../actions";
-import { Request } from '../../../interfaces';
-import instance from '../Base';
-import initialState from './reducers';
+import axios from "../BaseApi"
+import { put, takeLatest, call } from "redux-saga/effects"
+import { GET_LIST_SERVER_JOINED } from "./../../actions"
+import { Request } from "../../../interfaces"
 
-const signupUrl = `/auth/sign-in`;
+const getListServerJoinedUrl = `/server/get-servers-by-user`
 
-const listJoinServer = async () => {
-    try {
-      const { data } = await instance.get("/server/get-servers-by-user");
-  
-      // Lưu danh sách server vào localStorage
-      saveListJoinedServerToLocalStorage(data.data);
-  
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-  
-  // Hàm lưu danh sách server vào localStorage
-  const saveListJoinedServerToLocalStorage = (listJoinedServer:any) => {
-    const storedState = localStorage.getItem("initialState");
-    const parsedState = storedState ? JSON.parse(storedState) : {};
-  
-    const updatedState = {
-      ...parsedState,
-      listJoinedServer,
-    };
-  
-    localStorage.setItem("initialState", JSON.stringify(updatedState));
-  };
-  
-function* doListJoinServer(request: any): any {
-    try {
-        if (request) {
-
-            const response = yield call(listJoinServer);
-            console.log(response)
-            yield put(
-                listJoinedServerSuccess({
-                    response,
-                })
-            );
-
-            // localStorage.setItem('accessToken',response.accessToken);
-
-        }
-    } catch (e: any) {
-        yield put(
-            listJoinedServerFailure({
-                error: e.message,
-            })
-        );
-    }
+function getListServerJoined(payload: Record<string, unknown>) {
+  return axios.get(getListServerJoinedUrl)
 }
 
-export default function* watchListJoinServer() {
-    yield takeLatest(LISTJOINSERVER, doListJoinServer);
+function* doGetListServerJoined(request: Request<Record<string, unknown>>): any {
+  try {
+    const response = yield call(getListServerJoined, request.payload!)
+    yield put({
+      type: request.response?.success?.type,
+      payload: {
+        request: request.payload,
+        componentId: request.componentId,
+        response: response.data
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    yield put({
+      type: request.response?.failure?.type,
+      loading: false,
+      payload: {
+        request: request.payload,
+        componentId: request.componentId,
+        response: (error as any).response?.data
+      }
+    })
+  }
+}
+
+export default function* watchGetListServerJoined() {
+  yield takeLatest(GET_LIST_SERVER_JOINED, doGetListServerJoined)
 }

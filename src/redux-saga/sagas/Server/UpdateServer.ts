@@ -1,46 +1,39 @@
-import axios from '../BaseApi';
-import { put, takeLatest, call } from "redux-saga/effects";
-import { CREATESERVER, UPDATE_SERVER, createServerFailure, createServerSuccess, updateServerFailure, updateServerSuccess} from "./../../actions";
-import { Request } from '../../../interfaces';
-import instance from '../Base';
+import axios from "../BaseApi"
+import { put, takeLatest, call } from "redux-saga/effects"
+import { UPDATE_SERVER } from "./../../actions"
+import { Request } from "../../../interfaces"
 
-const signupUrl = `/auth/sign-in`;
+const updateServerUrl = (serverId: any) => `/server/${serverId}`
 
-const updateServer = async (payload: { name: string}) => {
-    console.log(payload)
-    const { data } = await instance.post(
-        "/server/update",
-        { ...payload },
-    );
-    console.log(payload)
-    return data;
+function updateServer(payload: Record<string, unknown>) {
+  return axios.post(updateServerUrl(payload.serverId))
+}
 
-};
-function* doUpdateServer(request: Request<{ name: string }>): any {
-    try {
-        if (request.payload) {
-
-            const response = yield call(updateServer, {
-                name: request.payload.name as string,
-            });
-            yield put(
-                updateServerSuccess({
-                    name: response.name,
-                })
-            );
-
-            // localStorage.setItem('accessToken',response.accessToken);
-
-        }
-    } catch (e: any) {
-        yield put(
-            updateServerFailure({
-                error: e.message,
-            })
-        );
-    }
+function* doUpdateServer(request: Request<Record<string, unknown>>): any {
+  try {
+    const response = yield call(updateServer, request.payload!)
+    yield put({
+      type: request.response?.success?.type,
+      payload: {
+        request: request.payload,
+        componentId: request.componentId,
+        response: response.data
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    yield put({
+      type: request.response?.failure?.type,
+      loading: false,
+      payload: {
+        request: request.payload,
+        componentId: request.componentId,
+        response: (error as any).response?.data
+      }
+    })
+  }
 }
 
 export default function* watchUpdateServer() {
-    yield takeLatest(UPDATE_SERVER, doUpdateServer);
+  yield takeLatest(UPDATE_SERVER, doUpdateServer)
 }

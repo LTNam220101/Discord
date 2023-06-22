@@ -1,0 +1,11 @@
+import { createReducer } from "../../../../utils/redux";
+
+export const GET_LIST_SERVER_JOINED_SUCCESS = 'GET_LIST_SERVER_JOINED_SUCCESS';
+export const GET_LIST_SERVER_JOINED_FAILED = 'GET_LIST_SERVER_JOINED_FAILED';
+export const GET_LIST_SERVER_JOINED_CLEAR = 'GET_LIST_SERVER_JOINED_CLEAR';
+
+export const getListServerJoinedResult = createReducer(
+  GET_LIST_SERVER_JOINED_SUCCESS,
+  GET_LIST_SERVER_JOINED_FAILED,
+  GET_LIST_SERVER_JOINED_CLEAR
+);
