@@ -31,7 +31,7 @@ import {
 } from "@mui/icons-material"
 import { useSelector, useDispatch } from "react-redux"
 import { Link as LinkDom, useParams, useRouteError } from "react-router-dom"
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 import { State } from "../../redux-saga/reducers"
 import { AUTH_LOGOUT } from "../../redux-saga/actions"
 import UserSetting from "../../screens/UserSetting/UserSetting"
@@ -40,42 +40,63 @@ import InviteDialog from "../Dialog/InviteDialog"
 import AddChannelDialog from "../AddServerBtn/AddChannelDialog"
 import NiceModal from "@ebay/nice-modal-react"
 import { getServerInfo } from "../../redux-saga/reducers/Server/GetServerById/actions"
+import { logout } from "../../redux-saga/reducers/Authen/SignOut/actions"
+import { LOGIN_CLEAR } from "../../redux-saga/reducers/Authen/SignIn/reducers"
+import { LOGOUT_CLEAR } from "../../redux-saga/reducers/Authen/SignOut/reducers"
 
 function ServerInfo() {
   const theme = useTheme()
   const dispatch = useDispatch()
-  const { serverId } = useParams();
+  const { serverId } = useParams()
   console.log(serverId)
-  const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
+  const [menuOpen, setMenuOpen] = React.useState(false)
+  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
+
+  const logoutResult = useSelector((state: State) => state.logoutResult)
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (logoutResult) {
+      if (logoutResult.success) {
+        HandleClose()
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("id")
+        dispatch({
+          type: LOGIN_CLEAR
+        })
+        dispatch({
+          type: LOGOUT_CLEAR
+        })
+        navigate("/login")
+      }
+    }
+  }, [logoutResult])
 
   const HandleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    setMenuOpen(true);
-    setMenuAnchor(event.currentTarget);
-  };
+    setMenuOpen(true)
+    setMenuAnchor(event.currentTarget)
+  }
   const HandleClose = () => {
-    setMenuOpen(false);
-    setMenuAnchor(null);
-  };
-
-  const handleLogout = () => {
-    HandleClose();
-    dispatch({ type: AUTH_LOGOUT });
-    navigate("/login");
-  };
-
-  const handleProfile=()=>{
-    navigate("/profiles");
+    setMenuOpen(false)
+    setMenuAnchor(null)
   }
-  let nameServer:any='';
-  const getServerInfor=useSelector((state:State)=>state.getServerByIdResult)
-  if(getServerInfor && getServerInfor?.response && getServerInfor.success){
-   nameServer=getServerInfor.response?.name
+
+  const handleLogout = () => dispatch(logout())
+
+  const handleProfile = () => {
+    navigate("/profiles")
   }
-  useEffect(()=>{
-    dispatch(getServerInfo({serverId}))
-  },[])
+  let nameServer: any = ""
+  const getServerInfor = useSelector(
+    (state: State) => state.getServerByIdResult
+  )
+  if (getServerInfor && getServerInfor?.response && getServerInfor.success) {
+    nameServer = getServerInfor.response?.name
+  }
+  useEffect(() => {
+    dispatch(getServerInfo({ serverId }))
+  }, [])
   // const userInfo = useSelector((state: State) => (state.login as any)).signIn.userInfo;
   // console.log(userInfo);
   // const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
@@ -111,7 +132,7 @@ function ServerInfo() {
             }
           }}
         >
-          {nameServer || 'Loading...'}      
+          {nameServer || "Loading..."}
         </Button>
         <Menu
           id="fade-menu"
@@ -234,20 +255,16 @@ function ServerInfo() {
           </Badge>
           <Stack spacing={0.25}>
             <Typography variant="caption" fontWeight="bold">
-            {/* {userInfo.username} */}
+              {/* {userInfo.username} */}
               {/* {userData?.fullname?.split(" ")[0]} */}
             </Typography>
             <Typography variant="caption" color="lightgray">
-            {/* #{userInfo?.id.slice(0, 6)} */}
+              {/* #{userInfo?.id.slice(0, 6)} */}
               {/* #{userData?._id.slice(0, 6)} */}
             </Typography>
           </Stack>
         </Stack>
-        <Menu
-          anchorEl={menuAnchor}
-          open={menuOpen}
-          onClose={HandleClose}
-        >
+        <Menu anchorEl={menuAnchor} open={menuOpen} onClose={HandleClose}>
           {/* <MenuItem onClick={handleProfile}>{userInfo.username} # {userInfo.id.slice(0, 6)}</MenuItem> */}
           <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
         </Menu>
@@ -256,7 +273,7 @@ function ServerInfo() {
           <IconButton
             color="default"
             size="small"
-          // onClick={() => dispatch(setOnMicrophone(!onMicrophone))}
+            // onClick={() => dispatch(setOnMicrophone(!onMicrophone))}
           >
             {/* {onMicrophone ? <MicIcon /> : <MicOffIcon />} */}
             <MicIcon />
@@ -265,7 +282,7 @@ function ServerInfo() {
           <IconButton
             color="default"
             size="small"
-          // onClick={() => dispatch(setOnCamera(!onCamera))}
+            // onClick={() => dispatch(setOnCamera(!onCamera))}
           >
             {/* {onCamera ? <CameraIcon /> : <CameraOffIcon />} */}
             <CameraIcon />
