@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { State } from "../../redux-saga/reducers"
 import LazyLoadComponent from "react-lazyload"
 import { getListServerJoined } from "./actions"
+import ServerPublic from "../ServerPublic/ServerPublic"
 
 const ServersList = () => {
   const dispatch = useDispatch()
@@ -47,7 +48,7 @@ const ServersList = () => {
             </LazyLoadComponent>
           </div>
         ))}
-
+      <ServerPublic />
       <AddServerBtn />
     </Stack>
   )

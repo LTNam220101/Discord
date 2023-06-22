@@ -9,8 +9,9 @@ import { logout } from "../redux-saga/reducers/Authen/SignOut/actions"
 import { State } from "../redux-saga/reducers"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
-import { LOGIN_CLEAR } from "../screens/Login/reducers"
-import { LOGOUT_CLEAR } from "../screens/UserSetting/reducers"
+import { LOGIN_CLEAR } from "../redux-saga/reducers/Authen/SignIn/reducers"
+import { LOGOUT_CLEAR } from "../redux-saga/reducers/Authen/SignOut/reducers"
+
 
 function SidebarSetting(props: any) {
   const dispatch = useDispatch()
@@ -99,7 +100,7 @@ function SidebarSetting(props: any) {
               justifyContent="space-between"
               onClick={() => dispatch(logout())}
             >
-              <Typography px={2}>Log Out</Typography>
+              <Typography px={2}>Log Outt</Typography>
               <LogoutIcon fontSize="small" />
             </Stack>
           </Stack>

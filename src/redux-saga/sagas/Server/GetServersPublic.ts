@@ -1,12 +1,13 @@
 import axios from "../BaseApi"
 import { put, takeLatest, call } from "redux-saga/effects"
-import { GET_SERVER_INFO } from "../../actions"
+import { GET_SERVERS_PUBLIC, GET_SERVER_INFO } from "../../actions"
 import { Request } from "../../../interfaces"
+import instance from "../BaseApi"
 
 const getServersPublicInfoUrl = `/server/get-servers-public`
 
 function getServersPublicInfo(payload: Record<string, unknown>) {
-  return axios.get(getServersPublicInfoUrl)
+  return instance.get(getServersPublicInfoUrl)
 }
 
 function* doGetServersPublicInfo(
@@ -37,5 +38,5 @@ function* doGetServersPublicInfo(
 }
 
 export default function* watchGetServersPublicInfo() {
-  yield takeLatest(GET_SERVER_INFO, doGetServersPublicInfo)
+  yield takeLatest(GET_SERVERS_PUBLIC, doGetServersPublicInfo)
 }

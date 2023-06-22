@@ -22,17 +22,17 @@ import { useDispatch, useSelector } from 'react-redux';
 // import LoadingModal from 'src/commons/components/LoadingModal';
 import { toast } from 'react-toastify';
 import { State } from '../../redux-saga/reducers';
-import { CREATESERVER } from '../../redux-saga/actions';
+import { CREATE_SERVER } from '../../redux-saga/actions';
 
-const AddServerDialog= NiceModal.create(() => {
+const AddServerDialog = NiceModal.create(() => {
     const modal = useModal();
     const dispatch = useDispatch();
     const [nameServer, setNameServer] = useState<string | null>(null);
     const [description, setDescription] = useState<string | null>(null);
     const [serverCode, setServerCode] = useState<string | null>(null);
 
-    const UserId = useSelector((state: State) => state.login.signIn.userInfo.id);
-    console.log(UserId);
+    // const UserId = useSelector((state: State) => state.login.signIn.userInfo.id);
+    // console.log(UserId);
 
     const handleNameServer = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNameServer(e.target.value);
@@ -51,10 +51,10 @@ const AddServerDialog= NiceModal.create(() => {
             name: nameServer,
             description: description,
             isPublic: true,
-            ownerId:UserId,
+            // ownerId: UserId,
         };
 
-        dispatch({type:CREATESERVER,payload:data});
+        dispatch({ type: CREATE_SERVER, payload: data });
         console.log(data)
         modal.hide();
     };

@@ -22,7 +22,7 @@ import { login } from "../../redux-saga/reducers/Authen/SignIn/actions"
 import { Formik } from "formik"
 
 const schema = yup.object().shape({
-  username: yup.string().email().required(),
+  username: yup.string().required(),
   password: yup.string().required()
 })
 
@@ -121,7 +121,7 @@ export default function LoginPage({ user }: any) {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 disabled={!isValid}
-              // onClick={handleHome}
+              // onClick={handleSubmit}
               >
                 Login
               </Button>

@@ -2,11 +2,12 @@ import axios from "../BaseApi"
 import { put, takeLatest, call } from "redux-saga/effects"
 import { CREATE_SERVER } from "./../../actions"
 import { Request } from "../../../interfaces"
+import instance from "../BaseApi"
 
 const createServerUrl = `/server`
 
 function createServer(payload: Record<string, unknown>) {
-  return axios.post(createServerUrl, payload)
+  return instance.post(createServerUrl, payload)
 }
 
 function* doCreateServer(request: Request<Record<string, unknown>>): any {

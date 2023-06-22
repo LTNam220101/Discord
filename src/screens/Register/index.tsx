@@ -18,7 +18,7 @@ import * as yup from "yup"
 import { Link as LinkDom } from "react-router-dom"
 import { ErrorMessage, Formik } from "formik"
 import { RegisterForm } from "./interfaces"
-import { register } from "../../redux-saga/reducers/Authen/SignUp/actions"
+import { signUp } from "../../redux-saga/reducers/Authen/SignUp/actions"
 import { State } from "../../redux-saga/reducers"
 
 const schema = yup.object().shape({
@@ -54,7 +54,7 @@ export default function Register({ user }: any) {
   }, [registerResult])
 
   const handleSubmit = (values: RegisterForm) => {
-    dispatch(register(values))
+    dispatch(signUp(values))
   }
 
   return (

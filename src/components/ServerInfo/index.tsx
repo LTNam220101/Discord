@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import {
   Accordion,
   colors,
@@ -30,7 +30,7 @@ import {
   AddCircle as AddICon
 } from "@mui/icons-material"
 import { useSelector, useDispatch } from "react-redux"
-import { Link as LinkDom, useRouteError } from "react-router-dom"
+import { Link as LinkDom, useParams, useRouteError } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
 import { State } from "../../redux-saga/reducers"
 import { AUTH_LOGOUT } from "../../redux-saga/actions"
@@ -39,10 +39,13 @@ import ServerSetting from "../../screens/ServerSetting/ServerSetting"
 import InviteDialog from "../Dialog/InviteDialog"
 import AddChannelDialog from "../AddServerBtn/AddChannelDialog"
 import NiceModal from "@ebay/nice-modal-react"
+import { getServerInfo } from "../../redux-saga/reducers/Server/GetServerById/actions"
 
 function ServerInfo() {
   const theme = useTheme()
   const dispatch = useDispatch()
+  const { serverId } = useParams();
+  console.log(serverId)
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
@@ -65,10 +68,18 @@ function ServerInfo() {
   const handleProfile=()=>{
     navigate("/profiles");
   }
-  const userInfo = useSelector((state: State) => (state.login as any)).signIn.userInfo;
-  console.log(userInfo);
-  const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
-  console.log(currentServer);
+  let nameServer:any='';
+  const getServerInfor=useSelector((state:State)=>state.getServerByIdResult)
+  if(getServerInfor && getServerInfor?.response && getServerInfor.success){
+   nameServer=getServerInfor.response?.name
+  }
+  useEffect(()=>{
+    dispatch(getServerInfo({serverId}))
+  },[])
+  // const userInfo = useSelector((state: State) => (state.login as any)).signIn.userInfo;
+  // console.log(userInfo);
+  // const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
+  // console.log(currentServer);
   //  modal setting server
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const open = Boolean(anchorEl)
@@ -100,7 +111,7 @@ function ServerInfo() {
             }
           }}
         >
-          {currentServer?.name || 'Loading...'}      
+          {nameServer || 'Loading...'}      
         </Button>
         <Menu
           id="fade-menu"
@@ -223,11 +234,11 @@ function ServerInfo() {
           </Badge>
           <Stack spacing={0.25}>
             <Typography variant="caption" fontWeight="bold">
-            {userInfo.username}
+            {/* {userInfo.username} */}
               {/* {userData?.fullname?.split(" ")[0]} */}
             </Typography>
             <Typography variant="caption" color="lightgray">
-            #{userInfo?.id.slice(0, 6)}
+            {/* #{userInfo?.id.slice(0, 6)} */}
               {/* #{userData?._id.slice(0, 6)} */}
             </Typography>
           </Stack>
@@ -237,7 +248,7 @@ function ServerInfo() {
           open={menuOpen}
           onClose={HandleClose}
         >
-          <MenuItem onClick={handleProfile}>{userInfo.username} # {userInfo.id.slice(0, 6)}</MenuItem>
+          {/* <MenuItem onClick={handleProfile}>{userInfo.username} # {userInfo.id.slice(0, 6)}</MenuItem> */}
           <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
         </Menu>
 

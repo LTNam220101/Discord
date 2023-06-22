@@ -12,6 +12,7 @@ function login(payload: Record<string, unknown>) {
 function* doLogin(request: Request<Record<string, unknown>>): any {
   try {
     const response = yield call(login, request.payload!)
+    console.log( request.response?.success?.type)
     yield put({
       type: request.response?.success?.type,
       payload: {
