@@ -14,16 +14,22 @@ import {
   FormControlLabel,
   Radio,
 } from '@mui/material';
+import { useEffect } from 'react';
 import { Close as CloseIcon } from '@mui/icons-material';
-import NiceModal, { muiDialogV5, useModal } from '@ebay/nice-modal-react';
-import { useDispatch } from 'react-redux';
+import NiceModal, { NiceModalHocProps, muiDialogV5, useModal } from '@ebay/nice-modal-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createChannel } from '../../redux-saga/reducers/Channel/CreateChannel/actions';
+import { State } from '../../redux-saga/reducers';
+import { useNavigate } from 'react-router-dom';
+import { getAllChannelByServer } from '../../redux-saga/reducers/Channel/GetAllChannelByServer/actions';
+import { getListServerJoined } from '../ServersList/actions';
 // import { createChannelAction } from 'src/features/server/serverSlice';
 
 interface AddChannelDialogProps {
   serverId: string;
 }
 
-const AddChannelDialog = NiceModal.create(({ serverId }:{serverId: string}) => {
+const AddChannelDialog = NiceModal.create<AddChannelDialogProps & NiceModalHocProps>(({ serverId }) => {
   const modal = useModal();
   const [nameChannel, setNameChannel] = React.useState<string | null>(null);
   const [description, setDescription] = React.useState<string | null>(null);
@@ -31,7 +37,7 @@ const AddChannelDialog = NiceModal.create(({ serverId }:{serverId: string}) => {
     'text'
   );
   const dispatch = useDispatch();
-
+  const navigate=useNavigate();
   const handleNameChannel = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNameChannel(e.target.value);
   };
@@ -41,19 +47,31 @@ const AddChannelDialog = NiceModal.create(({ serverId }:{serverId: string}) => {
   const handleChangeType = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChannelType(e.target.value as 'text' | 'voice');
   };
-
+  const userId= localStorage.getItem('id');
+  const [shouldReload, setShouldReload] = React.useState(false);
   const handleSubmitCreateChannel = () => {
     const data = {
+      userId,
       serverId,
       name: nameChannel,
       description: description,
-      type: channelType,
+      type: channelType === 'text' ? 0 : 1,
+      isPrivate:false,
     };
-    // dispatch(createChannelAction(data));
-
+    dispatch(createChannel(data));
+    dispatch(getAllChannelByServer({ serverId }))
+    setShouldReload(true);
     modal.hide();
   };
-
+  useEffect(() => {
+    if (shouldReload) {
+      dispatch(getAllChannelByServer({ serverId })) // Reload danh sách server
+      setShouldReload(false); 
+      navigate(`/channels/${serverId}`)// Đặt lại giá trị của biến đánh dấu sau khi đã reload
+    }
+  }, [shouldReload]);
+  const channel=useSelector((state:State)=>state.createChannelResult)
+  console.log(channel)
   return (
     <Dialog {...muiDialogV5(modal)}>
       <Container sx={{ position: 'relative', width: 500 }}>

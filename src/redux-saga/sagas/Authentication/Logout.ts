@@ -7,7 +7,7 @@ import instance from "../BaseApi"
 const signupUrl = `/auth/sign-out`
 
 function logout(payload: Record<string, unknown>) {
-  return instance.post(signupUrl, payload)
+  return axios.post(signupUrl, payload)
 }
 
 function* doLogout(request: Request<Record<string, unknown>>): any {

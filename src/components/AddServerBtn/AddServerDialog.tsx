@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     DialogTitle,
     DialogContent,
@@ -22,17 +22,21 @@ import { useDispatch, useSelector } from 'react-redux';
 // import LoadingModal from 'src/commons/components/LoadingModal';
 import { toast } from 'react-toastify';
 import { State } from '../../redux-saga/reducers';
-import { CREATE_SERVER } from '../../redux-saga/actions';
+import { createServer } from '../../redux-saga/reducers/Server/CreateServer/actions';
+import { createServerRole } from '../../redux-saga/reducers/ServerRole/CreateServerRole/actions';
+import { joinWithLink } from '../../redux-saga/reducers/User/JoinWithLink/actions';
+import { getListServerJoined } from '../ServersList/actions';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const AddServerDialog = NiceModal.create(() => {
     const modal = useModal();
     const dispatch = useDispatch();
+    const navigate=useNavigate()
     const [nameServer, setNameServer] = useState<string | null>(null);
     const [description, setDescription] = useState<string | null>(null);
     const [serverCode, setServerCode] = useState<string | null>(null);
-
-    // const UserId = useSelector((state: State) => state.login.signIn.userInfo.id);
-    // console.log(UserId);
 
     const handleNameServer = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNameServer(e.target.value);
@@ -45,37 +49,54 @@ const AddServerDialog = NiceModal.create(() => {
     const onCodeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setServerCode(e.target.value);
     };
+    const [shouldReload, setShouldReload] = useState(false);
 
     const handleCreateServer = () => {
+      if (localStorage.getItem("id")) {
         const data = {
-            name: nameServer,
-            description: description,
-            isPublic: true,
-            // ownerId: UserId,
+          name: nameServer,
+          description: description,
+          isPublic: true,
+          ownerId: localStorage.getItem("id"),
         };
-
-        dispatch({ type: CREATE_SERVER, payload: data });
-        console.log(data)
+        console.log(data);
+        dispatch(createServer(data));
+        dispatch(getListServerJoined());
+        setShouldReload(true); // Đánh dấu cần reload dữ liệu
         modal.hide();
+      }
     };
+    useEffect(() => {
+      if (shouldReload) {
+        dispatch(getListServerJoined()); // Reload danh sách server
+        setShouldReload(false); 
+        navigate("/")// Đặt lại giá trị của biến đánh dấu sau khi đã reload
+      }
+    }, [shouldReload,navigate]);
+    
+    const listServerJoined = useSelector(
+        (state: State) => state.getListServerJoinedResult
+    )
+    console.log(listServerJoined)
 
     const handleJoinServer = () => {
-        // NiceModal.hide(LoadingModal);
-        // serverAPI
-        //     .joinServerWithCode(serverCode)
-        //     .then(() => {
-        //         NiceModal.hide(LoadingModal);
-        //         toast.success('Join server successfully');
-        //         dispatch(getListJoinedServerAction());
+        console.log(typeof serverCode)
+        dispatch(joinWithLink({ code: serverCode }))
 
-        //         modal.hide();
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //         NiceModal.hide(LoadingModal);
-        //     });
     };
+    const joinWithLinkResulT = useSelector((state: State) => state.joinWithLinkResult)
+    console.log(joinWithLinkResulT?.response)
+    useEffect(() => {
+        if (joinWithLinkResulT) {
+          // Xử lý khi action joinWithLink thành công
+          console.log("Dispatch success:", joinWithLinkResulT);
+        }
+      }, [joinWithLinkResulT]);
 
+    const CreateServerResult = useSelector((state: State) => state.createServerResult)
+    console.log(CreateServerResult?.response)
+    const CreateServerRoleResult = useSelector((state: State) => state.createServerRoleResult)
+    console.log(CreateServerRoleResult)
     return (
         <Dialog {...muiDialogV5(modal)}>
             <Container sx={{ position: 'relative', width: 400 }}>

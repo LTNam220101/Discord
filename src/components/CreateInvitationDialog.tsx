@@ -1,4 +1,4 @@
-import NiceModal, { muiDialogV5, useModal } from "@ebay/nice-modal-react"
+import NiceModal, { NiceModalHocProps, muiDialogV5, useModal } from "@ebay/nice-modal-react"
 import { Close as CloseIcon } from "@mui/icons-material"
 import React, { useEffect, useState } from "react"
 import instance from "../redux-saga/sagas/BaseApi"
@@ -15,47 +15,34 @@ import {
   Stack
 } from "@mui/material"
 import LoadingModal from "../commons/LoadingModal"
+import { useDispatch, useSelector } from "react-redux"
+import { createInvite } from "../redux-saga/reducers/Invite/CreateInvite/actions"
+import { State } from "../redux-saga/reducers"
 
 type CreateInvitationDialogProps = {
   serverId: string
-  ownerId: string
+
 }
 
-const CreateInvitationDialog = NiceModal.create<CreateInvitationDialogProps>(
-  ({ serverId, ownerId }) => {
-    const modal = useModal()
+const CreateInvitationDialog = NiceModal.create<CreateInvitationDialogProps & NiceModalHocProps>(
+  ({ serverId }) => {
+    // Thân hàm của CreateInvitationDialo
 
+    const modal = useModal()
+    const dispatch = useDispatch()
     const [server, setServer] = useState<any>(null)
     const [expireTime, setExpireTime] = useState<number>(7)
     const [code, setCode] = useState<string>("")
-
+    console.log(serverId)
     const handleSubmit = () => {
-      NiceModal.show(LoadingModal)
 
-      instance
-        .post(
-          "http://localhost:3000/invite",
-          { serverId, expireTime, ownerId },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            }
-          }
-        )
-        .then((res) => {
-          setCode(res.data.data.inviteCode)
-          NiceModal.hide(LoadingModal)
-        })
-        .catch(() => {
-          NiceModal.hide(LoadingModal)
-        })
+      dispatch(createInvite({ serverId, expireTime }));
+      const codee=createInvitE?.response?.inviteCode;
+      setCode(codee as string )
     }
-
-    useEffect(() => {
-      NiceModal.show(LoadingModal)
-    }, [])
-
+    const createInvitE = useSelector((state: State) => state.createInviteResult)
+    console.log(createInvitE)
+    
     return (
       <Dialog {...muiDialogV5(modal)}>
         {

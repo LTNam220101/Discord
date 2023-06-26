@@ -12,6 +12,7 @@ function joinWithLink(payload: Record<string, unknown>) {
 function* doJoinWithLink(request: Request<Record<string, unknown>>): any {
   try {
     const response = yield call(joinWithLink, request.payload!)
+    console.log(response)
     yield put({
       type: request.response?.success?.type,
       payload: {

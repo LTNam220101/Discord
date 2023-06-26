@@ -1,4 +1,4 @@
-import NiceModal, { muiDialogV5, useModal } from '@ebay/nice-modal-react';
+import NiceModal, { NiceModalHocProps, muiDialogV5, useModal } from '@ebay/nice-modal-react';
 import {
     Dialog,
     DialogContent,
@@ -15,46 +15,52 @@ import {
     Button,
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 // import serverAPI from 'src/features/server/serverAPI';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LoadingModal from '../../commons/LoadingModal';
+import { deleteChannel } from '../../redux-saga/reducers/Channel/DeleteChannel/actions';
+import { getAllChannelByServer } from '../../redux-saga/reducers/Channel/GetAllChannelByServer/actions';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getChannelInfo } from '../../redux-saga/reducers/Channel/GetChannelById/actions';
+import { State } from '../../redux-saga/reducers';
 // import { updateChannelAction } from 'src/features/server/serverSlice';
 
 interface ChannelSettingDialogProps {
     channelId: string;
 }
 
-const ChannelSettingDialog: React.FC<ChannelSettingDialogProps> = ({channelId}) => {
+const ChannelSettingDialog= NiceModal.create<ChannelSettingDialogProps & NiceModalHocProps>(({channelId}) => {
     const modal = useModal();
     const dispatch = useDispatch();
-
-    const [channelDetail, setChannelDetail] = React.useState(null);
-
+    const navigate=useNavigate();
+    const { serverId } = useParams();
+    const [channelDetail, setChannelDetail] = React.useState(true);
+    useEffect(()=>{
+        dispatch(getChannelInfo({channel:channelId}))
+    },[])
+    
+    const getChannelInfor=useSelector((state:State)=>state.getChannelInfoResult)
+    const getChannelInforr=getChannelInfor?.response
+    console.log(getChannelInforr)
     const [input, setInput] = React.useState({
-        // name: channelDetail?.name,
-        // description: channelDetail?.description,
-        name: 'quang',
-        description: 'quangquang'
-    });
+        name: getChannelInforr?.name ?? '',
+        description: getChannelInforr?.description ?? ''
+      });
 
-    useEffect(() => {
-        NiceModal.show(LoadingModal);
-
-        // serverAPI.getChannelInfo(channelId).then((res) => {
-        //     setChannelDetail(res.data.data);
-        //     setInput({
-        //         name: res.data.data.name,
-        //         description: res.data.data.description,
-        //     });
-        //     NiceModal.hide(LoadingModal);
-        // });
-    }, []);
-
+    console.log(getChannelInforr)
     const handleSubmit = () => {
         // dispatch(updateChannelAction({ id: channelId, data: input }));
     };
+    
 
+    const handleDelete=()=>{
+        dispatch(deleteChannel({channelId:channelId}))
+       modal.hide()
+    }
+
+
+    console.log("channelId",channelId)
     return (
         <Dialog {...muiDialogV5(modal)}>
             {channelDetail && (
@@ -90,13 +96,13 @@ const ChannelSettingDialog: React.FC<ChannelSettingDialogProps> = ({channelId}) 
                                     value="text"
                                     control={<Radio readOnly />}
                                     label="Text"
-                                    // checked={channelDetail?.type === 'text'}
+                                    checked={ getChannelInforr?.type === 0}
                                 />
                                 <FormControlLabel
                                     value="voice"
                                     control={<Radio readOnly />}
                                     label="Voice"
-                                    // checked={channelDetail?.type === 'voice'}
+                                    checked={ getChannelInforr?.type === 1}
                                 />
                             </RadioGroup>
                         </FormControl>
@@ -114,6 +120,7 @@ const ChannelSettingDialog: React.FC<ChannelSettingDialogProps> = ({channelId}) 
                             maxRows={4}
                             sx={{ marginTop: 2 }}
                         />
+                        <button onClick={handleDelete}>Delete</button>
                     </DialogContent>
 
                     <DialogActions sx={{ justifyContent: 'flex-end' }}>
@@ -129,6 +136,6 @@ const ChannelSettingDialog: React.FC<ChannelSettingDialogProps> = ({channelId}) 
             )}
         </Dialog>
     );
-};
-
+}
+)
 export default ChannelSettingDialog;

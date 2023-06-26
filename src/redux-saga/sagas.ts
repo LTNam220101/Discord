@@ -29,6 +29,7 @@ import watchGetDetailUserRoleInServer from "./sagas/ServerRole/GetDetailUserRole
 import watchGetServerRole from "./sagas/ServerRole/GetServerRole"
 import watchRemoveUserFromServerRole from "./sagas/ServerRole/RemoveUserFromServerRole"
 import watchUpdateServerRole from "./sagas/ServerRole/UpdateServerRole"
+import watchJoinWithLink from "./sagas/User/JoinWithLink"
 
 export default function* rootSaga() {
   yield all([
@@ -71,5 +72,7 @@ export default function* rootSaga() {
     watchGetServerRole(),
     watchRemoveUserFromServerRole(),
     watchUpdateServerRole(),
+
+    watchJoinWithLink(),
   ])
 }

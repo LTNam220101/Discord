@@ -40,6 +40,51 @@ import InviteDialog from "../Dialog/InviteDialog"
 import AddChannelDialog from "../AddServerBtn/AddChannelDialog"
 import NiceModal from "@ebay/nice-modal-react"
 import { getServerInfo } from "../../redux-saga/reducers/Server/GetServerById/actions"
+import ChannelSettingDialog from "../Dialog/ChannelSettingDialog"
+import { getAllChannelByServer } from "../../redux-saga/reducers/Channel/GetAllChannelByServer/actions"
+import { getUser } from "../../redux-saga/reducers/User/GetUser/actions"
+import Profiles from "../Profiles/Profiles"
+
+const ChannelRow = ({ channel, serverId }: { channel: any; serverId: string | undefined }) => {
+  // const activeChannel = useSelector((state) => state.servers.currentChannel);
+  console.log(channel)
+  return (
+    <Box
+      borderRadius={1}
+      p={0.5}
+      sx={{
+        '&:hover': {
+          backgroundColor: colors.grey[700],
+        },
+        // backgroundColor:
+        //   // channel._id === activeChannel._id ? colors.grey[800] : 'transparent',
+      }}
+      position="relative"
+    >
+       <Link
+        component={LinkDom}
+        underline="none"
+        to={`/channels/${serverId}/${channel._id}`}
+      >
+        <Stack direction="row" spacing={1} color={colors.grey[500]}>
+          {channel.type === 'text' ? <TagIcon /> : <VolumeUpIcon />}
+          <Typography variant="subtitle2" component="h4">
+            {channel.name}
+          </Typography>
+        </Stack>
+      </Link>
+      <IconButton
+        size="small"
+        sx={{ position: 'absolute', top: 0, right: 0 }}
+        onClick={() =>
+          NiceModal.show(ChannelSettingDialog, { channelId: channel._id })
+        }
+      >
+        <SettingsIcon fontSize="small" sx={{ color: 'Grey' }} />
+      </IconButton>
+    </Box>
+  );
+};
 
 function ServerInfo() {
   const theme = useTheme()
@@ -50,37 +95,28 @@ function ServerInfo() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
 
-  const HandleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    setMenuOpen(true);
-    setMenuAnchor(event.currentTarget);
+  const HandleClick = () => {
+    NiceModal.show(Profiles)
   };
-  const HandleClose = () => {
-    setMenuOpen(false);
-    setMenuAnchor(null);
-  };
-
-  const handleLogout = () => {
-    HandleClose();
-    dispatch({ type: AUTH_LOGOUT });
-    navigate("/login");
-  };
-
-  const handleProfile=()=>{
+  const handleProfile = () => {
     navigate("/profiles");
   }
-  let nameServer:any='';
-  const getServerInfor=useSelector((state:State)=>state.getServerByIdResult)
-  if(getServerInfor && getServerInfor?.response && getServerInfor.success){
-   nameServer=getServerInfor.response?.name
+  let nameServer: any = '';
+  const getServerInfor = useSelector((state: State) => state.getServerByIdResult)
+  if (getServerInfor && getServerInfor?.response && getServerInfor.success) {
+    nameServer = getServerInfor.response?.name
   }
-  useEffect(()=>{
-    dispatch(getServerInfo({serverId}))
-  },[])
-  // const userInfo = useSelector((state: State) => (state.login as any)).signIn.userInfo;
-  // console.log(userInfo);
-  // const currentServer = useSelector((state: State) => state.getServerInfo?.currentServer?.response);
-  // console.log(currentServer);
-  //  modal setting server
+  const currentServer = getServerInfor?.response
+  useEffect(() => {
+    console.log(serverId)
+    dispatch(getServerInfo({ serverId }))
+    dispatch(getAllChannelByServer({ serverId }))
+  }, [serverId])
+  const getAllChannelByServerr = useSelector((state: State) => state.getAllChannelByServerResult)
+  const getAllChannelByServerrr = getAllChannelByServerr?.response
+  console.log(getAllChannelByServerrr)
+  console.log(currentServer)
+  console.log(getAllChannelByServerrr && Array.isArray(getAllChannelByServerrr) && getAllChannelByServerrr)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const open = Boolean(anchorEl)
 
@@ -90,6 +126,16 @@ function ServerInfo() {
   const handleClose = () => {
     setAnchorEl(null)
   }
+  const userId=localStorage.getItem("id");
+  useEffect(() => {
+    console.log(userId)
+    dispatch(getUser({ userId:userId }))
+  }, [dispatch])
+  const getUserResulT = useSelector((state: State) => state.getUserResult);
+
+  useEffect(() => {
+    console.log(getUserResulT);
+  }, [getUserResulT]);
   return (
     <Stack height="100%" width="250px">
       <Stack>
@@ -111,7 +157,7 @@ function ServerInfo() {
             }
           }}
         >
-          {nameServer || 'Loading...'}      
+          {nameServer || 'Loading...'}
         </Button>
         <Menu
           id="fade-menu"
@@ -148,7 +194,7 @@ function ServerInfo() {
           <MenuItem
             onClick={() => {
               handleClose()
-              NiceModal.show(AddChannelDialog)
+              NiceModal.show(AddChannelDialog, { serverId: String(serverId) })
             }}
           >
             <Stack width={190} direction="row" justifyContent="space-between">
@@ -160,9 +206,10 @@ function ServerInfo() {
       </Stack>
 
       {[
-        ["text channel", "text"],
-        ["voice channel", "voice"]
+        ["text channel", 0],
+        ["voice channel", 1]
       ].map(([title, type], key) => (
+        
         <Accordion
           key={key}
           defaultExpanded={true}
@@ -181,17 +228,25 @@ function ServerInfo() {
               variant="body2"
               sx={{ fontSize: "12px" }}
             >
-              {title.toUpperCase()}
+             {`${title}`.toUpperCase()}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Stack spacing={0.25}>
-              {/* {currentServer?.channels
-                ?.filter((item) => item.type === type)
-                ?.map((item) => (
-                  <ChannelRow key={item._id} channel={item} />
-                ))} */}
+             
+              {getAllChannelByServerrr && Array.isArray(getAllChannelByServerrr) && getAllChannelByServerrr
+                .filter((item: any) => item.type === type)
+                .map((item: any) => {
+                  console.log('Current item:', item);
+                  return (
+                    <ChannelRow key={item._id} channel={item} serverId={serverId} />
+                  );
+                })}
+
             </Stack>
+
+
+
           </AccordionDetails>
         </Accordion>
       ))}
@@ -234,24 +289,15 @@ function ServerInfo() {
           </Badge>
           <Stack spacing={0.25}>
             <Typography variant="caption" fontWeight="bold">
-            {/* {userInfo.username} */}
+              {/* {userInfo.username} */}
               {/* {userData?.fullname?.split(" ")[0]} */}
             </Typography>
             <Typography variant="caption" color="lightgray">
-            {/* #{userInfo?.id.slice(0, 6)} */}
+              {/* #{userInfo?.id.slice(0, 6)} */}
               {/* #{userData?._id.slice(0, 6)} */}
             </Typography>
           </Stack>
         </Stack>
-        <Menu
-          anchorEl={menuAnchor}
-          open={menuOpen}
-          onClose={HandleClose}
-        >
-          {/* <MenuItem onClick={handleProfile}>{userInfo.username} # {userInfo.id.slice(0, 6)}</MenuItem> */}
-          <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
-        </Menu>
-
         <Stack direction="row" p={0.5} spacing={0.5}>
           <IconButton
             color="default"
