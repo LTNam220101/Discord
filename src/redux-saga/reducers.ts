@@ -12,7 +12,7 @@ import { createChannelRoleResult } from "./reducers/ChannelRole/CreateChannelRol
 import { deleteChannelRoleResult } from "./reducers/ChannelRole/DeleteChannelRole/reducers"
 import { getChannelRoleInfoResult } from "./reducers/ChannelRole/GetChannelRoleById/reducers"
 import { updateChannelRoleResult } from "./reducers/ChannelRole/UpdateChannelRole/reducers"
-import { createInvite } from './reducers/Invite/CreateInvite/actions';
+import { createInviteResult } from './reducers/Invite/CreateInvite/reducers';
 import { getAllMessageResult } from "./reducers/Message/GetAllMessage/reducers"
 import { sendMessageResult } from "./reducers/Message/SendMessage/reducers"
 import { createServerResult } from "./reducers/Server/CreateServer/reducers"
@@ -53,7 +53,7 @@ const rootReducer = combineReducers({
   getChannelRoleInfoResult: getChannelRoleInfoResult,
   updateChannelRoleResult: updateChannelRoleResult,
 
-  createInvite: createInvite,
+  createInviteResult: createInviteResult,
 
   getAllMessageResult: getAllMessageResult,
   sendMessageResult: sendMessageResult,

@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import {
   Box,
   Stack,
@@ -18,10 +18,15 @@ import NiceModal from "@ebay/nice-modal-react"
 import { useDispatch, useSelector } from "react-redux"
 import { DELETE_SERVER, GET_SERVER_INFO } from "../../redux-saga/actions"
 import { State } from "../../redux-saga/reducers"
-import CreateInvitationDialog from "../CreateInvitationDialog"
+
 import ServerSettingDialog from "../ServerSetting/ServerSettingDialog"
 import AddChannelDialog from "../AddServerBtn/AddChannelDialog"
 import { getServerInfo } from "../../redux-saga/reducers/Server/GetServerById/actions"
+import { deleteServer } from "../../redux-saga/reducers/Server/DeleteServer/actions"
+import CreateInvitationDialog from "../CreateInvitationDialog"
+import { login } from "../../redux-saga/sagas/Authentication"
+
+
 
 function ServerItem({
   isDirect = false,
@@ -38,6 +43,7 @@ function ServerItem({
   const [contextMenu, setContextMenu] = React.useState<{
     mouseX: number
     mouseY: number
+    serverId?: number
   } | null>(null)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
 
@@ -56,15 +62,23 @@ function ServerItem({
   // } else {
   //   console.log("currentServer is undefined");
   // }
-  const getServerInfor = useSelector((state: State) => state.getServerByIdResult)
-  console.log(getServerInfor)
-  const ownerId = getServerInfor?.response?.ownerId;
   const loginResult = useSelector((state: State) => state.loginResult)
   console.log(loginResult)
-  const idLoginResult = loginResult?.response?.id
-  if (ownerId === idLoginResult) {
-    // dispatch(addUserToServerRole({ server: serverId, role:}))
-  } 
+  useEffect(() => {
+    dispatch(getServerInfo({ serverId: serverId }))
+  }, [serverId])
+  const getServerInfor = useSelector((state: State) => state.getServerByIdResult)
+  const ownerId = getServerInfor?.response?.ownerId
+  const loginResultId = localStorage.getItem("id")
+
+  console.log(ownerId)
+  console.log(loginResultId)
+  const deleteServerResulT=useSelector((state:State)=>state.deleteServerResult)
+  console.log(deleteServerResulT)
+
+  const handleDelete=()=>{
+    dispatch(deleteServer({ serverId: serverId }))
+  }
   return (
     <Stack
       width="100%"
@@ -85,7 +99,8 @@ function ServerItem({
           contextMenu === null
             ? {
               mouseX: e.clientX + 2,
-              mouseY: e.clientY - 6
+              mouseY: e.clientY - 6,
+              serverId: serverId
             }
             : null
         )
@@ -105,18 +120,20 @@ function ServerItem({
         <MenuItem
           onClick={() => {
             // dispatch(getServerInfoAction(serverId))
-            NiceModal.show(ServerSettingDialog)
+            NiceModal.show(ServerSettingDialog,{ serverId: String(contextMenu?.serverId) })
           }}
         >
           Server Settings
         </MenuItem>
         <MenuItem
           onClick={() => {
-            NiceModal.show(CreateInvitationDialog, /*{ serverId }*/)
+            NiceModal.show(CreateInvitationDialog, { serverId: String(contextMenu?.serverId) });
+
           }}
         >
           Create invitation
         </MenuItem>
+
         <MenuItem
           onClick={() => {
             // dispatch(getServerInfoAction(serverId))
@@ -125,14 +142,13 @@ function ServerItem({
         >
           Add channel
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            dispatch({ type: DELETE_SERVER, payload: { serverId: serverId } })
-            // NiceModal.show(AddChannelDialog, { serverId })
-          }}
-        >
-          Delete Server
-        </MenuItem>
+        {loginResultId === ownerId && (
+          <MenuItem
+            onClick={() =>handleDelete()}
+          >
+            Delete Server
+          </MenuItem>
+        )}
       </Menu>
       <Box
         height={isSelected ? "40px" : "20px"}

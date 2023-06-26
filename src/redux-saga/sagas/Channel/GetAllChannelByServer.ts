@@ -3,10 +3,10 @@ import { put, takeLatest, call } from "redux-saga/effects"
 import { GET_ALL_CHANNEL_BY_SERVER } from "../../actions"
 import { Request } from "../../../interfaces"
 
-const getAllChannelByServerUrl = (channel: any) => `/channel/getAll/${channel}`
+const getAllChannelByServerUrl = (serverId: any) => `/channel/getAll/${serverId}`
 
 function getAllChannelByServer(payload: Record<string, unknown>) {
-  return axios.get(getAllChannelByServerUrl(payload.channelId))
+  return axios.get(getAllChannelByServerUrl(payload.serverId))
 }
 
 function* doGetAllChannelByServer(

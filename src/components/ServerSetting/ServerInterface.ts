@@ -1,3 +1,6 @@
+import { Key } from "react";
+import { SystemStyleObject } from '@mui/system';
+
 export interface SidebarServerProps {
   handleIndexTab: (index: number) => void;
 }
@@ -30,6 +33,7 @@ export interface Role {
   countMember: number;
   permissions: Permission[];
 }
+
 
 export interface TabPanelProps {
   children?: React.ReactNode;
