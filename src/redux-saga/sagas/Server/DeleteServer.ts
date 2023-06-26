@@ -3,10 +3,10 @@ import { put, takeLatest, call } from "redux-saga/effects"
 import { DELETE_SERVER } from "./../../actions"
 import { Request } from "../../../interfaces"
 
-const deleteServerUrl = `/server/delete`
+const deleteServerUrl = (serverId: any) => `/server/delete/${serverId}`
 
 function deleteServer(payload: Record<string, unknown>) {
-  return axios.delete(deleteServerUrl, payload)
+  return axios.delete(deleteServerUrl(payload.serverId))
 }
 
 function* doDeleteServer(request: Request<Record<string, unknown>>): any {

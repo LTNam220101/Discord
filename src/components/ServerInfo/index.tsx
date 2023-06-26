@@ -103,7 +103,7 @@ function ServerInfo() {
   useEffect(() => {
     if (logoutResult) {
       if (logoutResult.success) {
-        HandleClose()
+        handleClose()
         localStorage.removeItem("accessToken")
         localStorage.removeItem("refreshToken")
         localStorage.removeItem("id")
@@ -124,6 +124,10 @@ function ServerInfo() {
   const handleProfile = () => {
     navigate("/profiles");
   }
+  const handleLogout = () => {
+    handleClose();
+    dispatch({ type: AUTH_LOGOUT });
+  };
   let nameServer: any = '';
   const getServerInfor = useSelector((state: State) => state.getServerByIdResult)
   if (getServerInfor && getServerInfor?.response && getServerInfor.success) {
@@ -321,7 +325,7 @@ function ServerInfo() {
             </Typography>
           </Stack>
         </Stack>
-        <Menu anchorEl={menuAnchor} open={menuOpen} onClose={HandleClose}>
+        <Menu anchorEl={menuAnchor} open={menuOpen} onClose={handleClose}>
           {/* <MenuItem onClick={handleProfile}>{userInfo.username} # {userInfo.id.slice(0, 6)}</MenuItem> */}
           <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
         </Menu>
