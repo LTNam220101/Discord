@@ -1,14 +1,15 @@
+
 import axios from "../BaseApi"
 import { put, takeLatest, call } from "redux-saga/effects"
 import { DELETE_SERVER } from "./../../actions"
 import { Request } from "../../../interfaces"
 import { getListServerJoined } from "../../../components/ServersList/actions"
 
-const deleteServerUrl = `/server/delete`
+const deleteServerUrl= (serverId:any) => `/server/delete/${serverId}`
 
 function deleteServer(payload: Record<string, unknown>) {
   console.log(payload)
-  return axios.delete(deleteServerUrl, payload)
+  return axios.delete(deleteServerUrl(payload.serverId), payload)
 }
 
 function* doDeleteServer(request: Request<Record<string, unknown>>): any {

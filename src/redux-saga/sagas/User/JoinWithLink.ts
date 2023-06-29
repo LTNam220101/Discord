@@ -1,7 +1,8 @@
-import axios from "../BaseApi"
+
 import { put, takeLatest, call } from "redux-saga/effects"
-import { JOIN_WITH_LINK } from "./../../actions"
 import { Request } from "../../../interfaces"
+import axios from "../BaseApi"
+import { JOIN_WITH_LINK } from "../../actions"
 
 const joinWithLinkUrl = (code: any) => `/user/invite/${code}`
 

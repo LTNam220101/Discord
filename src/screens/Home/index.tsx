@@ -14,55 +14,33 @@ import ChatColumn from "./../../components/Chat/ChatColumn"
 import { Socket, io } from "socket.io-client"
 import { getServerInfo } from "../../redux-saga/reducers/Server/GetServerById/actions"
 import { getChannelInfo } from "../../redux-saga/reducers/Channel/GetChannelById/actions"
+
 const Home = () => {
   const dispatch = useDispatch()
-  // const userId = useSelector(
-  //   (state: State) => state.login.signIn.userInfo as any
-  // ).id
-  // console.log(userId)
-  // const currentServer = useSelector(
-  //   (state: State) => state.getServerInfo?.currentServer?.response
-  // )
-  // console.log(currentServer)
-
-  // if (currentServer && userId) {
-  //   if (userId === currentServer.ownerId) {
-  //     dispatch({
-  //       type: ADD_USER_TO_SERVER_ROLE,
-  //       payload: {
-  //         userId: userId,
-  //         serverId: currentServer._id,
-  //         RoleId: "6492d196faac11f2ff0b3fed"
-  //       }
-  //     })
-  //   }
-  // }
-  const loginResult = useSelector((state: State) => state.loginResult)
-  console.log(loginResult)
-  const getServerInfo = useSelector((state: State) => state.getServerByIdResult)
-  const idLoginResult = loginResult?.response?.id
-  console.log(getServerInfo)
-
-
   const params = useParams();
   const location = useLocation();
   console.log({ params, location })
 
   const navigate = useNavigate();
 
-  // const [socket, setSocket] = React.useState<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
+  interface DefaultEventsMap{
+    [eventName: string]: any;
+  }
+  const loginResult = useSelector((state: State) => state.loginResult)
+  const isAuth=localStorage.getItem('id')
+  const isGetMe=loginResult?.response
+  const [socket, setSocket] = React.useState<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
 
+useEffect(() => {
+  if (!isAuth && !isGetMe) {
+    
+  } else if (!localStorage.getItem('id') && !socket) {
+    setSocket(
+      io("http://localhost:3000")
+    );
+  }
+}, [isAuth, isGetMe, navigate, socket]);
 
-
-  // useEffect(() => {
-  //   if (!isAuth && !isGetMe) {
-  //     navigate('/auth/sign-in', { state: { from: location.pathname } });
-  //   } else if (isAuth && !socket) {
-  //     setSocket(
-  //       io("http://localhost:3000")
-  //     );
-  //   }
-  // }, [isAuth, isGetMe, navigate, socket]);
 
   return (
     <>
@@ -79,10 +57,8 @@ const Home = () => {
         </Box>
 
         <Box height="100%" width="100%">
-          <ChatColumn />
+          <ChatColumn socket={socket}/>
         </Box>
-
-        <Box>{/* <ServerSettingDialog id={""} /> */}</Box>
       </Stack>
     </>
   )

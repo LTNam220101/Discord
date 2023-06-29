@@ -17,15 +17,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import NiceModal from '@ebay/nice-modal-react';
 import TextChatCpn from './TextChatCPN/TextChatCPN';
 import ListUserChannel from '../ListUserChannelDialog';
+import { useParams } from 'react-router-dom';
+import { getChannelInfo } from '../../redux-saga/reducers/Channel/GetChannelById/actions';
+import { State } from '../../redux-saga/reducers';
+
 
 interface ChatColumnProps {
-  // socket: any; // Type of socket object
+  socket: any; // Type of socket object
 }
 
-const ChatColumn: React.FC<ChatColumnProps> = (/*{ socket }*/) => {
+const ChatColumn: React.FC<ChatColumnProps> = ({ socket }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
-
+  const { serverId, channelId } = useParams();
+  console.log({channelId,serverId})
+  if (serverId && channelId) {
+    dispatch(getChannelInfo({ channel: channelId, serverId: serverId }));
+  }
+useEffect(()=>{
+  dispatch(getChannelInfo({ channel: channelId, serverId: serverId }));
+},[channelId,serverId])  
+  
+  const getChannelInfor=useSelector((state:State)=>state.getChannelInfoResult)
+  console.log(getChannelInfor)
   // const curChannel = useSelector(
   //   (state: RootState) => state.servers.currentChannel
   // );
@@ -55,7 +69,7 @@ const ChatColumn: React.FC<ChatColumnProps> = (/*{ socket }*/) => {
           fontWeight="bold"
           alignSelf="center"
         >
-          {/* #{curChannel.name} */}
+          {/* {getChannelInfor?.response?.name} */}
         </Typography>
 
         <Stack direction="row" ml="auto" alignItems="center" spacing={1}>
@@ -73,11 +87,9 @@ const ChatColumn: React.FC<ChatColumnProps> = (/*{ socket }*/) => {
         </Stack>
       </Stack>
 
-      {/* {curChannel.type === 'text' ? (
+      {getChannelInfor?.response?.type === 0 ? (
         <TextChatCpn socket={socket} />
-      ) : curChannel.type === 'voice' ? (
-        <VideoChatCpn socket={socket} />
-      ) : ( */}
+      ) : (
         <Box
           width="100%"
           height="100%"
@@ -86,8 +98,7 @@ const ChatColumn: React.FC<ChatColumnProps> = (/*{ socket }*/) => {
           alignItems="center"
         >
           <Typography variant="h3">Open a channel to begin</Typography>
-        </Box>
-      {/* )} */}
+        </Box>)}
     </Stack>
   );
 };

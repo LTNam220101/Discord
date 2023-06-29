@@ -50,6 +50,7 @@ import { createServerRole } from '../../redux-saga/reducers/ServerRole/CreateSer
 import { updateServerRole } from '../../redux-saga/reducers/ServerRole/UpdateServerRole/actions';
 import { getAllServerRoles } from '../../redux-saga/reducers/ServerRole/GetAllServerRoles/actions';
 import { getUser } from '../../redux-saga/reducers/User/GetUser/actions';
+import { kickUser } from '../../redux-saga/reducers/Server/KickUser/actions';
 
 
 function TabPanel(props: TabPanelProps) {
@@ -222,339 +223,350 @@ const ServerSettingDialog = NiceModal.create<CreateInvitationDialogProps & NiceM
     //     setServerName(currentServer.name);
     // }, [currentServer.name]);
     useEffect(() => {
-            dispatch(getAllServerRoles({ serverId: serverId }))
-            
-        }, [serverId])
+        console.log(dispatch(getUser({ userId: localStorage.getItem('id') })))
+    }, [serverId]);
+
+    const getUserResult = useSelector((state: State) => state.getUserResult);
+    console.log(getUserResult)
+    useEffect(() => {
+        dispatch(getAllServerRoles({ serverId: serverId }))
+
+    }, [serverId])
     const getAllServerRoless = useSelector((state: State) => state.getAllServerRolesResult)
-        console.log(getAllServerRoless)
-        const [roles, setRoles] = useState(_mockRoles_);
-        const [isRoleClicked, setIsRoleClicked] = useState(Array(roles.length).fill(false));
+    console.log(getAllServerRoless)
+    const [roles, setRoles] = useState(_mockRoles_);
+    const [isRoleClicked, setIsRoleClicked] = useState(Array(roles.length).fill(false));
 
-        const handleAddRole = () => {
+    const handleAddRole = () => {
 
-            const roleNames = ["admin", "member", "moderator"];
-            const rolePairs: any = []; // Khởi tạo mảng rolePairs trước vòng lặp
+        const roleNames = ["admin", "member", "moderator"];
+        const rolePairs: any = []; // Khởi tạo mảng rolePairs trước vòng lặp
 
-            if (getAllServerRoless?.success && Array.isArray(getAllServerRoless.response)) {
-                console.log(getAllServerRoless?.response)
-                const serverRoles = getAllServerRoless.response as any[];
+        if (getAllServerRoless?.success && Array.isArray(getAllServerRoless.response)) {
+            console.log(getAllServerRoless?.response)
+            const serverRoles = getAllServerRoless.response as any[];
 
-                roleNames.forEach((roleName) => {
-                    const role = serverRoles.find((item) => item.name === roleName);
-                    if (role) {
-                        const roleId = role._id;
-                        const rolePair = { roleId, roleName };
-                        rolePairs.push(rolePair);
-                    }
-                });
-
-                console.log(rolePairs);
-                // Gửi dispatch với rolePairs
-                // dispatch(sendRolePairs(rolePairs));
-            }
-
-            NiceModal.show(CreateRole, { rolePairs: rolePairs, serverId: serverId });
-        };
-
-        const handleSaveChanges = (roleIndex: any, roleName: string) => {
-            // if (isRoleClicked[roleIndex]) {
-            const payload = [];
-
-            // Lặp qua các vai trò
-            for (let i = 0; i < roles.length; i++) {
-                const role = roles[i];
-
-                // Kiểm tra vai trò tương ứng với roleIndex
-                if (i === roleIndex) {
-                    // Lặp qua các permissions
-                    for (let j = 0; j < role.permissions.length; j++) {
-                        const permission = role.permissions[j];
-
-                        // Kiểm tra giá trị value của permission
-                        if (permission.value) {
-                            // Đẩy vị trí lựa chọn vào mảng payload
-                            payload.push({ roleIndex: i, permissionIndex: j });
-                        }
-                    }
-                }
-            }
-            const permissionIndexes = payload.map(item => item.permissionIndex);
-            console.log(permissionIndexes)
-            // Gửi dispatch với payload
-            // dispatch(sendpayload(payload));
-            console.log(payload)
-            let roleId = ''
-            if (getAllServerRoless?.success) {
-                const role = (getAllServerRoless.response as any)?.find((item: any) => item.name === roleName);
-
+            roleNames.forEach((roleName) => {
+                const role = serverRoles.find((item) => item.name === roleName);
                 if (role) {
-                    console.log(alert("Đã có role này rồi"));
-                } else {
-                    dispatch(createServerRole({ name: roleName, rolePolicies: permissionIndexes, serverId: currentServer._id }))
+                    const roleId = role._id;
+                    const rolePair = { roleId, roleName };
+                    rolePairs.push(rolePair);
                 }
-            }
+            });
 
-            // Sau khi lưu thay đổi, cập nhật trạng thái isEditing
-            dispatch(getAllServerRoles({ serverId: currentServer._id }))
-            console.log(permissionIndexes)
-            // }
-            // const updatedClickedRoles = [...isRoleClicked];
-            // updatedClickedRoles[roleIndex] = true;
-            // setIsRoleClicked(updatedClickedRoles);
-        };
+            console.log(rolePairs);
+            // Gửi dispatch với rolePairs
+            // dispatch(sendRolePairs(rolePairs));
+        }
 
-        const handleUpdate = (roleIndex: any, roleName: string) => {
-            const payload = [];
+        NiceModal.show(CreateRole, { rolePairs: rolePairs, serverId: serverId });
+    };
 
-            // Lặp qua các vai trò
-            for (let i = 0; i < roles.length; i++) {
-                const role = roles[i];
+    const handleSaveChanges = (roleIndex: any, roleName: string) => {
+        // if (isRoleClicked[roleIndex]) {
+        const payload = [];
 
-                // Kiểm tra vai trò tương ứng với roleIndex
-                if (i === roleIndex) {
-                    // Lặp qua các permissions
-                    for (let j = 0; j < role.permissions.length; j++) {
-                        const permission = role.permissions[j];
+        // Lặp qua các vai trò
+        for (let i = 0; i < roles.length; i++) {
+            const role = roles[i];
 
-                        // Kiểm tra giá trị value của permission
-                        if (permission.value) {
-                            // Đẩy vị trí lựa chọn vào mảng payload
-                            payload.push({ roleIndex: i, permissionIndex: j });
-                        }
+            // Kiểm tra vai trò tương ứng với roleIndex
+            if (i === roleIndex) {
+                // Lặp qua các permissions
+                for (let j = 0; j < role.permissions.length; j++) {
+                    const permission = role.permissions[j];
+
+                    // Kiểm tra giá trị value của permission
+                    if (permission.value) {
+                        // Đẩy vị trí lựa chọn vào mảng payload
+                        payload.push({ roleIndex: i, permissionIndex: j });
                     }
                 }
             }
-            const permissionIndexes = payload.map(item => item.permissionIndex);
-            console.log(permissionIndexes)
-            // Gửi dispatch với payload
-            // dispatch(sendpayload(payload));
-            console.log(payload)
-            let roleId = ''
-            if (getAllServerRoless?.success) {
-                const role = (getAllServerRoless.response as any)?.find((item: any) => item.name === roleName);
+        }
+        const permissionIndexes = payload.map(item => item.permissionIndex);
+        console.log(permissionIndexes)
+        // Gửi dispatch với payload
+        // dispatch(sendpayload(payload));
+        console.log(payload)
+        let roleId = ''
+        if (getAllServerRoless?.success) {
+            const role = (getAllServerRoless.response as any)?.find((item: any) => item.name === roleName);
 
-                if (role) {
-                    roleId = role._id;
-                    // Sử dụng roleId theo nhu cầu của bạn
-                    console.log(roleId);
-                } else {
-                    // Không tìm thấy role với name tương ứng
+            if (role) {
+                console.log(alert("Đã có role này rồi"));
+            } else {
+                dispatch(createServerRole({ name: roleName, rolePolicies: permissionIndexes, serverId: currentServer._id }))
+            }
+        }
+
+        // Sau khi lưu thay đổi, cập nhật trạng thái isEditing
+        dispatch(getAllServerRoles({ serverId: currentServer._id }))
+        console.log(permissionIndexes)
+        // }
+        // const updatedClickedRoles = [...isRoleClicked];
+        // updatedClickedRoles[roleIndex] = true;
+        // setIsRoleClicked(updatedClickedRoles);
+    };
+
+    const handleUpdate = (roleIndex: any, roleName: string) => {
+        const payload = [];
+
+        // Lặp qua các vai trò
+        for (let i = 0; i < roles.length; i++) {
+            const role = roles[i];
+
+            // Kiểm tra vai trò tương ứng với roleIndex
+            if (i === roleIndex) {
+                // Lặp qua các permissions
+                for (let j = 0; j < role.permissions.length; j++) {
+                    const permission = role.permissions[j];
+
+                    // Kiểm tra giá trị value của permission
+                    if (permission.value) {
+                        // Đẩy vị trí lựa chọn vào mảng payload
+                        payload.push({ roleIndex: i, permissionIndex: j });
+                    }
                 }
             }
-            console.log(roleId);
-            console.log(roleName)
-            dispatch(updateServerRole({ name: roleName, rolePolicies: permissionIndexes, serverId: serverId, roleId: roleId }))
-            // Sau khi lưu thay đổi, cập nhật trạng thái isEditing
-        };
-        const updateServerRol = useSelector((state: State) => state.updateServerResult)
-        console.log(updateServerRol)
-        
-        return (
-            <Dialog fullScreen {...muiDialogV5(modal)}>
-                <Box sx={{ position: 'relative' }}>
-                    <IconButton
-                        aria-label="close"
+        }
+        const permissionIndexes = payload.map(item => item.permissionIndex);
+        console.log(permissionIndexes)
+        // Gửi dispatch với payload
+        // dispatch(sendpayload(payload));
+        console.log(payload)
+        let roleId = ''
+        if (getAllServerRoless?.success) {
+            const role = (getAllServerRoless.response as any)?.find((item: any) => item.name === roleName);
+
+            if (role) {
+                roleId = role._id;
+                // Sử dụng roleId theo nhu cầu của bạn
+                console.log(roleId);
+            } else {
+                // Không tìm thấy role với name tương ứng
+            }
+        }
+        console.log(roleId);
+        console.log(roleName)
+        dispatch(updateServerRole({ name: roleName, rolePolicies: permissionIndexes, serverId: serverId, roleId: roleId }))
+        // Sau khi lưu thay đổi, cập nhật trạng thái isEditing
+    };
+    const updateServerRol = useSelector((state: State) => state.updateServerResult)
+    console.log(updateServerRol)
+    const handleKickUser = (userId:any) => {
+        dispatch(kickUser({userId:userId ,serverId:serverId}))
+        window.location.reload()
+    }
+    const kickUserResulT=useSelector((state:State)=>state.kickUserResult)
+    console.log(kickUserResulT)
+    return (
+        <Dialog fullScreen {...muiDialogV5(modal)}>
+            <Box sx={{ position: 'relative' }}>
+                <IconButton
+                    aria-label="close"
+                    sx={{
+                        position: 'absolute',
+                        top: 16,
+                        right: 48,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                    onClick={() => modal.hide()}
+                >
+                    <CloseIcon />
+                </IconButton>
+
+                <DialogTitle>Server settings</DialogTitle>
+                <DialogContent>
+                    <Box
                         sx={{
-                            position: 'absolute',
-                            top: 16,
-                            right: 48,
-                            color: (theme) => theme.palette.grey[500],
+                            flexGrow: 1,
+                            bgcolor: colors.grey[900],
+                            display: 'flex',
+                            borderRadius: 1,
                         }}
-                        onClick={() => modal.hide()}
                     >
-                        <CloseIcon />
-                    </IconButton>
-
-                    <DialogTitle>Server settings</DialogTitle>
-                    <DialogContent>
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                bgcolor: colors.grey[900],
-                                display: 'flex',
-                                borderRadius: 1,
+                        <Tabs
+                            orientation="vertical"
+                            variant="scrollable"
+                            value={currentTab}
+                            onChange={(event, newTab) => {
+                                setCurrentTab(newTab);
                             }}
+                            aria-label="Vertical tabs"
+                            sx={{ borderRight: 1, borderColor: 'divider', width: 350 }}
                         >
-                            <Tabs
-                                orientation="vertical"
-                                variant="scrollable"
-                                value={currentTab}
-                                onChange={(event, newTab) => {
-                                    setCurrentTab(newTab);
-                                }}
-                                aria-label="Vertical tabs"
-                                sx={{ borderRight: 1, borderColor: 'divider', width: 350 }}
-                            >
-                                <Tab label="Overview" {...a11yProps(0)} />
-                                <Tab label="Roles" {...a11yProps(1)} />
-                                <Tab label="Members" {...a11yProps(2)} />
-                            </Tabs>
+                            <Tab label="Overview" {...a11yProps(0)} />
+                            <Tab label="Roles" {...a11yProps(1)} />
+                            <Tab label="Members" {...a11yProps(2)} />
+                        </Tabs>
 
-                            <TabPanel value={currentTab} index={0}>
-                                <Typography variant="h5" component="h2" mb={4}>
-                                    Overview
-                                </Typography>
-                                <Box display="flex">
-                                    <Avatar
-                                        sx={{
-                                            width: 100,
-                                            height: 100,
-                                            marginRight: 4,
-                                            '&:hover': {
-                                                cursor: 'pointer',
-                                            },
-                                        }}
-                                        onClick={() => alert('Change avatar')}
-                                    />
-                                    <Stack direction="column" spacing={1}>
-                                        <TextField
-                                            size="small"
-                                            label="Server name"
-                                            value={serverName}
-                                            onChange={(event) => setServerName(event.target.value)}
-                                        />
-                                        <Button
-                                            variant="contained"
-                                            disabled={serverName === currentServer.name}
-                                        // onClick={() => updateServer({ name: serverName })}
-                                        >
-                                            Save
-                                        </Button>
-                                    </Stack>
-                                </Box>
-                            </TabPanel>
-
-                            <TabPanel value={currentTab} index={1}>
-                                <Typography variant="h5" component="h2">
-                                    Roles
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    component="p"
-                                    color={'GrayText'}
-                                    mb={4}
-                                >
-                                    Use roles to manage permissions for your server members.
-                                </Typography>
-
-                                <Box display="flex" mb={2} sx={{ width: '100%' }}>
-                                    <FormControl size="small" sx={{ mr: 1, width: '50ch' }}>
-                                        <InputLabel>Search role</InputLabel>
-                                        <OutlinedInput
-                                            endAdornment={
-                                                <InputAdornment position="end" sx={{ color: 'GrayText' }}>
-                                                    <SearchIcon />
-                                                </InputAdornment>
-                                            }
-                                            label="Search role"
-                                        />
-                                    </FormControl>
-                                    <Button variant="outlined" onClick={handleAddRole}>Create role</Button>
-                                </Box>
-
-                                {_mockRoles_.map((role, index) => (
-                                    <Accordion
-                                        key={index}
-                                        sx={{ backgroundColor: colors.grey[900] }}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel1-content"
-                                            id="panel2"
-                                        >
-                                            <Typography
-                                                variant="subtitle1"
-                                                fontWeight="bold"
-                                                sx={{ width: '50%', flexShrink: 0 }}
-                                            >
-                                                {role.name}
-                                            </Typography>
-                                            <PersonIcon sx={{ color: 'text.secondary', mr: 1 }} onClick={() => NiceModal.show(Table)} />
-                                            <Typography sx={{ color: 'text.secondary' }}>
-                                                {role.countMember}
-                                            </Typography>
-                                        </AccordionSummary>
-
-                                        <AccordionDetails>
-                                            <List>
-                                                {role.permissions.map((permission, index2) => (
-                                                    <ListItem key={index2}>
-                                                        <ListItemText
-                                                            primary={permission.name}
-                                                            secondary={permission.description}
-                                                        />
-                                                        <ListItemSecondaryAction>
-                                                            <Switch
-                                                                edge="end"
-                                                                checked={permission.value}
-                                                                onChange={() => {
-                                                                    const updatedRoles = [...roles];
-                                                                    updatedRoles[index].permissions[index2].value = !permission.value;
-                                                                    setRoles(updatedRoles);
-                                                                }}
-                                                                value={permission.value}
-                                                            />
-                                                        </ListItemSecondaryAction>
-
-                                                    </ListItem>
-                                                ))}
-                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        onClick={() => handleSaveChanges(index, role.name)}
-                                                        disabled={isRoleClicked[index]}
-                                                    >
-                                                        Tạo
-                                                    </Button>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        onClick={() => handleUpdate(index, role.name)}
-                                                    >
-                                                        Sửa
-                                                    </Button>
-                                                </div>
-
-                                            </List>
-                                        </AccordionDetails>
-                                    </Accordion>
-                                ))}
-                            </TabPanel>
-
-                            <TabPanel value={currentTab} index={2}>
-                                <Typography variant="h5" component="h2">
-                                    Members
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    component="p"
-                                    color={'GrayText'}
-                                    mb={4}
-                                >
-                                    Manage your server members.
-                                </Typography>
-
-                                <Box display="flex" mb={2} sx={{ width: '100%' }}>
-                                    <FormControl
-                                        fullWidth
+                        <TabPanel value={currentTab} index={0}>
+                            <Typography variant="h5" component="h2" mb={4}>
+                                Overview
+                            </Typography>
+                            <Box display="flex">
+                                <Avatar
+                                    sx={{
+                                        width: 100,
+                                        height: 100,
+                                        marginRight: 4,
+                                        '&:hover': {
+                                            cursor: 'pointer',
+                                        },
+                                    }}
+                                    onClick={() => alert('Change avatar')}
+                                />
+                                <Stack direction="column" spacing={1}>
+                                    <TextField
                                         size="small"
-                                        sx={{ mr: 1, width: '50ch' }}
+                                        label="Server name"
+                                        value={serverName}
+                                        onChange={(event) => setServerName(event.target.value)}
+                                    />
+                                    <Button
+                                        variant="contained"
+                                        disabled={serverName === currentServer.name}
+                                    // onClick={() => updateServer({ name: serverName })}
                                     >
-                                        <InputLabel>Search member</InputLabel>
-                                        <OutlinedInput
-                                            endAdornment={
-                                                <InputAdornment position="end" sx={{ color: 'GrayText' }}>
-                                                    <SearchIcon />
-                                                </InputAdornment>
-                                            }
-                                            label="Search member"
-                                        />
-                                    </FormControl>
-                                    <Button variant="outlined">Invite member</Button>
-                                </Box>
+                                        Save
+                                    </Button>
+                                </Stack>
+                            </Box>
+                        </TabPanel>
 
-                                <List>
+                        <TabPanel value={currentTab} index={1}>
+                            <Typography variant="h5" component="h2">
+                                Roles
+                            </Typography>
+                            <Typography
+                                variant="subtitle1"
+                                component="p"
+                                color={'GrayText'}
+                                mb={4}
+                            >
+                                Use roles to manage permissions for your server members.
+                            </Typography>
+
+                            <Box display="flex" mb={2} sx={{ width: '100%' }}>
+                                <FormControl size="small" sx={{ mr: 1, width: '50ch' }}>
+                                    <InputLabel>Search role</InputLabel>
+                                    <OutlinedInput
+                                        endAdornment={
+                                            <InputAdornment position="end" sx={{ color: 'GrayText' }}>
+                                                <SearchIcon />
+                                            </InputAdornment>
+                                        }
+                                        label="Search role"
+                                    />
+                                </FormControl>
+                                <Button variant="outlined" onClick={handleAddRole}>Create role</Button>
+                            </Box>
+
+                            {_mockRoles_.map((role, index) => (
+                                <Accordion
+                                    key={index}
+                                    sx={{ backgroundColor: colors.grey[900] }}
+                                >
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1-content"
+                                        id="panel2"
+                                    >
+                                        <Typography
+                                            variant="subtitle1"
+                                            fontWeight="bold"
+                                            sx={{ width: '50%', flexShrink: 0 }}
+                                        >
+                                            {role.name}
+                                        </Typography>
+                                        <PersonIcon sx={{ color: 'text.secondary', mr: 1 }} onClick={() => NiceModal.show(Table)} />
+                                        <Typography sx={{ color: 'text.secondary' }}>
+                                            {role.countMember}
+                                        </Typography>
+                                    </AccordionSummary>
+
+                                    <AccordionDetails>
+                                        <List>
+                                            {role.permissions.map((permission, index2) => (
+                                                <ListItem key={index2}>
+                                                    <ListItemText
+                                                        primary={permission.name}
+                                                        secondary={permission.description}
+                                                    />
+                                                    <ListItemSecondaryAction>
+                                                        <Switch
+                                                            edge="end"
+                                                            checked={permission.value}
+                                                            onChange={() => {
+                                                                const updatedRoles = [...roles];
+                                                                updatedRoles[index].permissions[index2].value = !permission.value;
+                                                                setRoles(updatedRoles);
+                                                            }}
+                                                            value={permission.value}
+                                                        />
+                                                    </ListItemSecondaryAction>
+
+                                                </ListItem>
+                                            ))}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => handleSaveChanges(index, role.name)}
+                                                    disabled={isRoleClicked[index]}
+                                                >
+                                                    Tạo
+                                                </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => handleUpdate(index, role.name)}
+                                                >
+                                                    Sửa
+                                                </Button>
+                                            </div>
+
+                                        </List>
+                                    </AccordionDetails>
+                                </Accordion>
+                            ))}
+                        </TabPanel>
+
+                        <TabPanel value={currentTab} index={2}>
+                            <Typography variant="h5" component="h2">
+                                Members
+                            </Typography>
+                            <Typography
+                                variant="subtitle1"
+                                component="p"
+                                color={'GrayText'}
+                                mb={4}
+                            >
+                                Manage your server members.
+                            </Typography>
+
+                            <Box display="flex" mb={2} sx={{ width: '100%' }}>
+                                <FormControl
+                                    fullWidth
+                                    size="small"
+                                    sx={{ mr: 1, width: '50ch' }}
+                                >
+                                    <InputLabel>Search member</InputLabel>
+                                    <OutlinedInput
+                                        endAdornment={
+                                            <InputAdornment position="end" sx={{ color: 'GrayText' }}>
+                                                <SearchIcon />
+                                            </InputAdornment>
+                                        }
+                                        label="Search member"
+                                    />
+                                </FormControl>
+                                <Button variant="outlined">Invite member</Button>
+                            </Box>
+
+                            <List>
                                     {currentServer.members.map((user: any, index: any) => {
                                         useEffect(() => {
                                             dispatch(getUser({ userId: user }));
@@ -577,7 +589,7 @@ const ServerSettingDialog = NiceModal.create<CreateInvitationDialogProps & NiceM
 
 
                                                 <ListItemSecondaryAction>
-                                                    <IconButton edge="end" aria-label="delete">
+                                                    <IconButton edge="end" aria-label="delete" onClick={()=>handleKickUser(user)}>
                                                         <DeleteIcon />
                                                     </IconButton>
                                                 </ListItemSecondaryAction>
@@ -585,12 +597,14 @@ const ServerSettingDialog = NiceModal.create<CreateInvitationDialogProps & NiceM
                                         )
                                     })}
                                 </List>
-                            </TabPanel>
-                        </Box>
-                    </DialogContent>
-                </Box>
-            </Dialog>
-        );
-    });
+                            
+
+                        </TabPanel>
+                    </Box>
+                </DialogContent>
+            </Box>
+        </Dialog>
+    );
+});
 
 export default ServerSettingDialog;

@@ -2,7 +2,6 @@ import axios from "../BaseApi"
 import { put, takeLatest, call } from "redux-saga/effects"
 import { AUTH_LOGOUT } from "./../../actions"
 import { Request } from "../../../interfaces"
-import instance from "../BaseApi"
 
 const signupUrl = `/auth/sign-out`
 

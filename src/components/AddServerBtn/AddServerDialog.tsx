@@ -27,6 +27,7 @@ import { createServerRole } from '../../redux-saga/reducers/ServerRole/CreateSer
 import { joinWithLink } from '../../redux-saga/reducers/User/JoinWithLink/actions';
 import { getListServerJoined } from '../ServersList/actions';
 import { useNavigate } from 'react-router-dom';
+import { requestToJoinServer } from '../../redux-saga/reducers/User/RequestToJoinServer/actions';
 
 
 
@@ -37,6 +38,7 @@ const AddServerDialog = NiceModal.create(() => {
     const [nameServer, setNameServer] = useState<string | null>(null);
     const [description, setDescription] = useState<string | null>(null);
     const [serverCode, setServerCode] = useState<string | null>(null);
+    const [IdServer,setIdServer]=useState<string | null>(null);
 
     const handleNameServer = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNameServer(e.target.value);
@@ -48,6 +50,9 @@ const AddServerDialog = NiceModal.create(() => {
 
     const onCodeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setServerCode(e.target.value);
+    };
+    const onIdServerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setIdServer(e.target.value);
     };
     const [shouldReload, setShouldReload] = useState(false);
 
@@ -90,8 +95,16 @@ const AddServerDialog = NiceModal.create(() => {
         if (joinWithLinkResulT) {
           // Xử lý khi action joinWithLink thành công
           console.log("Dispatch success:", joinWithLinkResulT);
+          navigate(`/channels/${joinWithLinkResulT?.response?.serverId}`)
         }
       }, [joinWithLinkResulT]);
+
+    const handleJoinServerById=()=>{
+        console.log()
+        dispatch(requestToJoinServer({serverId:IdServer}))
+    }
+    const requestToJoinServerr=useSelector((state:State)=>state.requestToJoinServerResult)
+    console.log(requestToJoinServerr)
 
     const CreateServerResult = useSelector((state: State) => state.createServerResult)
     console.log(CreateServerResult?.response)
@@ -152,6 +165,25 @@ const AddServerDialog = NiceModal.create(() => {
                         <Stack direction="row-reverse" py={1}>
                             <Button onClick={handleJoinServer} variant="contained">
                                 Join Server
+                            </Button>
+                        </Stack>
+                    </Stack>
+                    <Stack>
+                        <Typography pt={1} fontWeight={500} fontSize={18}>
+                            Join a server with code
+                        </Typography>
+
+                        <TextField
+                            sx={{ mt: 2 }}
+                            onChange={onIdServerChange}
+                            multiline
+                            margin="dense"
+                            label="Server code"
+                            variant="outlined"
+                        />
+                        <Stack direction="row-reverse" py={1}>
+                            <Button onClick={handleJoinServerById} variant="contained">
+                                Join Server By Id
                             </Button>
                         </Stack>
                     </Stack>
