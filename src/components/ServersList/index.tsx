@@ -15,7 +15,6 @@ const ServersList = () => {
     (state: State) => state.getListServerJoinedResult
   )
   console.log(listServerJoined)
-
   useEffect(() => {
     dispatch(getListServerJoined())
   }, [dispatch])

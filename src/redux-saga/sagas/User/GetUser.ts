@@ -1,11 +1,13 @@
 import axios from "../BaseApi"
 import { put, takeLatest, call } from "redux-saga/effects"
-import { GET_USER } from "./../../actions"
+import { GET_USER } from "../../actions"
 import { Request } from "../../../interfaces"
+
 
 const getUserUrl = (userId: any) => `/user/${userId}`
 
 function getUser(payload: Record<string, unknown>) {
+  console.log(payload.userId)
   return axios.get(getUserUrl(payload.userId))
 }
 

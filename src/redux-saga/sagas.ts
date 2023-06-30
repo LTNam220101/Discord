@@ -30,6 +30,10 @@ import watchGetServerRole from "./sagas/ServerRole/GetServerRole"
 import watchRemoveUserFromServerRole from "./sagas/ServerRole/RemoveUserFromServerRole"
 import watchUpdateServerRole from "./sagas/ServerRole/UpdateServerRole"
 import watchJoinWithLink from "./sagas/User/JoinWithLink"
+import watchGetUser from "./sagas/User/GetUser"
+import watchJoinWithId from "./sagas/User/RequestToJoinServer"
+import watchKickUser from "./sagas/Server/KickUser"
+
 
 export default function* rootSaga() {
   yield all([
@@ -39,8 +43,8 @@ export default function* rootSaga() {
 
     watchCreateChannel(),
     watchDeleteChannel(),
-    watchGetAllChannelByServer(), 
-    watchGetChannelInfo(), 
+    watchGetAllChannelByServer(),
+    watchGetChannelInfo(),
     watchUpdateChannel(),
 
     watchCreateChannelRole(),
@@ -61,6 +65,7 @@ export default function* rootSaga() {
     watchGetServerInfo(),
     watchGetServersPublicInfo(),
     watchResponseRequest(),
+    watchKickUser(),
 
     watchAddUserToServerRole(),
     watchCreateServerRole(),
@@ -74,5 +79,7 @@ export default function* rootSaga() {
     watchUpdateServerRole(),
 
     watchJoinWithLink(),
+    watchGetUser(),
+    watchJoinWithId(),
   ])
 }

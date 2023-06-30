@@ -1,18 +1,19 @@
+
 import axios from "../BaseApi"
 import { put, takeLatest, call } from "redux-saga/effects"
-import { UPDATE_CHANNEL } from "../../actions"
+import { CREATE_SERVER, KICK_USER } from "./../../actions"
 import { Request } from "../../../interfaces"
 
-const updateChannelUrl = ({ channel, serverId }: { channel: any; serverId: any }) => `/channel/${serverId}/${channel}`
 
-function updateChannel(payload: Record<string, unknown>) {
-  const { channel, serverId } = payload;
-  return axios.put(updateChannelUrl({channel,serverId}), payload)
+const kickUserUrl = `/server/kick-user`
+
+function kickUser(payload: Record<string, unknown>) {
+  return axios.put(kickUserUrl, payload)
 }
 
-function* doUpdateChannel(request: Request<Record<string, unknown>>): any {
+function* doKickUser(request: Request<Record<string, unknown>>): any {
   try {
-    const response = yield call(updateChannel, request.payload!)
+    const response = yield call(kickUser, request.payload!)
     yield put({
       type: request.response?.success?.type,
       payload: {
@@ -35,6 +36,6 @@ function* doUpdateChannel(request: Request<Record<string, unknown>>): any {
   }
 }
 
-export default function* watchUpdateChannel() {
-  yield takeLatest(UPDATE_CHANNEL, doUpdateChannel)
+export default function* watchKickUser() {
+  yield takeLatest(KICK_USER, doKickUser)
 }

@@ -1,12 +1,15 @@
+import { Channel } from './../../../components/Video/VideoInterface';
 import axios from "../BaseApi"
 import { put, takeLatest, call } from "redux-saga/effects"
 import { GET_CHANNEL_INFO } from "../../actions"
 import { Request } from "../../../interfaces"
 
-const getChannelInfoUrl = (channel: any) => `/channel/${channel}`
+const getChannelInfoUrl = ({channel,serverId}:{channel:any,serverId:any}) => `/channel/${serverId}/${channel}`
 
 function getChannelInfo(payload: Record<string, unknown>) {
-  return axios.get(getChannelInfoUrl(payload.channel))
+  const {serverId,channel}=payload;
+  console.log(payload)
+  return axios.get(getChannelInfoUrl({channel,serverId}))
 }
 
 function* doGetChannelInfo(request: Request<Record<string, unknown>>): any {
