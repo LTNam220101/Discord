@@ -1,7 +1,9 @@
+
 import axios from "../BaseApi"
 import { put, takeLatest, call } from "redux-saga/effects"
 import { DELETE_SERVER } from "./../../actions"
 import { Request } from "../../../interfaces"
+import { getListServerJoined } from "../../../components/ServersList/actions"
 
 const deleteServerUrl = (serverId: any) => `/server/delete/${serverId}`
 

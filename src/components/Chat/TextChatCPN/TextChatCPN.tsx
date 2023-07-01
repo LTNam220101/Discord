@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Typography,
   Box,
@@ -8,7 +8,7 @@ import {
   InputBase,
   IconButton,
 } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { formatDistanceToNowStrict, format } from 'date-fns';
 import {
   AddCircleRounded as AddIcon,
@@ -16,6 +16,9 @@ import {
 } from '@mui/icons-material';
 import { TextChatProps } from './TextChatProps';
 import { RootState } from '../../../redux-saga/store';
+import { useParams } from 'react-router-dom';
+import { getChannelInfo } from '../../../redux-saga/reducers/Channel/GetChannelById/actions';
+import { State } from '../../../redux-saga/reducers';
 
 function formatRelativeTimestamp(timestamp: Date): string {
   const now = new Date();
@@ -32,18 +35,24 @@ function formatRelativeTimestamp(timestamp: Date): string {
   return formatDistanceToNowStrict(timestamp, { addSuffix: true });
 }
 
-function TextChatCpn(/*{ socket }: TextChatProps*/) {
+function TextChatCpn({ socket }: TextChatProps) {
 //   const curChannel = useSelector((state: RootState) => state.servers.currentChannel);
   const [msgInput, setMsgInput] = React.useState('');
 
   const ref = React.useRef<HTMLDivElement>(null);
-
-//   React.useEffect(() => {
-//     // scroll to bottom
-//     if (ref.current) {
-//       ref.current.scrollTop = ref.current.scrollHeight;
-//     }
-//   }, [curChannel?.messages?.length]);
+  const dispatch=useDispatch()
+  const { serverId, channelId } = useParams();
+  useEffect(()=>{
+    dispatch(getChannelInfo({channel:channelId}))
+  },[channelId])
+  const getChannelInfor=useSelector((state:State)=>state.getChannelInfoResult)
+  console.log(getChannelInfor)
+  React.useEffect(() => {
+    // scroll to bottom
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight;
+    }
+  }, [getChannelInfor?.response?.messages]);
 
   return (
     <>
@@ -99,34 +108,34 @@ function TextChatCpn(/*{ socket }: TextChatProps*/) {
           </IconButton>
 
           <InputBase
-            // placeholder={`Message #${curChannel?.name}`}
+            placeholder={`Message #${getChannelInfor?.response?.name}`}
             // variant="standard"
             multiline
             maxRows={10}
             fullWidth
             value={msgInput}
-            // onChange={(e) => setMsgInput(e.target.value)}
-            // onKeyDown={(e) => {
-            //   if (e.ctrlKey && e.key === 'Enter' && msgInput.length > 0) {
-            //     socket.emit('sendMessage', {
-            //       channelId: curChannel?._id,
-            //       content: msgInput,
-            //     });
-            //     setMsgInput('');
-            //   }
-            // }}
+            onChange={(e) => setMsgInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.ctrlKey && e.key === 'Enter' && msgInput.length > 0) {
+                socket.emit('sendMessage', {
+                  channelId: getChannelInfor?.response?._id,
+                  content: msgInput,
+                });
+                setMsgInput('');
+              }
+            }}
           />
 
           <IconButton
-            // onClick={() => {
-            //   if (msgInput.length > 0) {
-            //     socket.emit('sendMessage', {
-            //       channelId: curChannel?._id,
-            //       content: msgInput,
-            //     });
-            //     setMsgInput('');
-            //   }
-            // }}
+            onClick={() => {
+              if (msgInput.length > 0) {
+                socket.emit('sendMessage', {
+                  channelId: getChannelInfor?.response?._id,
+                  content: msgInput,
+                });
+                setMsgInput('');
+              }
+            }}
           >
             <SendIcon />
           </IconButton>

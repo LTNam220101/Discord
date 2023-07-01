@@ -25,6 +25,7 @@ import { getServerInfo } from "../../redux-saga/reducers/Server/GetServerById/ac
 import { deleteServer } from "../../redux-saga/reducers/Server/DeleteServer/actions"
 import CreateInvitationDialog from "../CreateInvitationDialog"
 import { login } from "../../redux-saga/sagas/Authentication"
+import { getListServerJoined } from "../ServersList/actions"
 
 
 
@@ -73,11 +74,18 @@ function ServerItem({
 
   console.log(ownerId)
   console.log(loginResultId)
+ 
+ 
+  const handleDelete= ()=>{
+    console.log(serverId)
+    dispatch(deleteServer({ serverId :serverId}));
+
+    dispatch(getListServerJoined())
+  }
   const deleteServerResulT=useSelector((state:State)=>state.deleteServerResult)
   console.log(deleteServerResulT)
-
-  const handleDelete=()=>{
-    dispatch(deleteServer({ serverId: serverId }))
+  if(deleteServerResulT?.response?.status===200){
+    dispatch(getListServerJoined())
   }
   return (
     <Stack

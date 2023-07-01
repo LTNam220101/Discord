@@ -72,7 +72,7 @@ const CreateRole = NiceModal.create<CreateInvitationDialogProps & NiceModalHocPr
                                 label="Role"
                                 sx={{ minWidth: '120px' }}
                             >
-                                <MenuItem value="admin">admin</MenuItem>
+                                <MenuItem value="Admin">Admin</MenuItem>
                                 <MenuItem value="moderator">moderator</MenuItem>
                                 <MenuItem value="member">member</MenuItem>
                             </Select>

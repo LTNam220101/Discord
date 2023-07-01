@@ -3,10 +3,12 @@ import { Request } from "../../../interfaces"
 import { DELETE_CHANNEL } from "../../actions"
 import axios from "../BaseApi"
 
-const deleteChannelUrl = (channelId: any) => `/channel/${channelId}`
+const deleteChannelUrl = ({channelId,serverId}:{channelId:any,serverId:any}) => `/channel/${serverId}/${channelId}`
 
 function deleteChannel(payload: Record<string, unknown>) {
-  return axios.delete(deleteChannelUrl(payload.channelId), payload)
+  const {serverId,channelId}=payload;
+  console.log(payload)
+  return axios.delete(deleteChannelUrl({channelId,serverId}))
 }
 
 function* doDeleteChannel(request: Request<Record<string, unknown>>): any {

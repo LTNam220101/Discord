@@ -27,14 +27,15 @@ import { State } from '../../redux-saga/reducers';
 // import { updateChannelAction } from 'src/features/server/serverSlice';
 
 interface ChannelSettingDialogProps {
-    channelId: string;
+    channelId: any;
+    serverId:any;
 }
 
-const ChannelSettingDialog= NiceModal.create<ChannelSettingDialogProps & NiceModalHocProps>(({channelId}) => {
+const ChannelSettingDialog= NiceModal.create<ChannelSettingDialogProps & NiceModalHocProps>(({channelId,serverId}) => {
     const modal = useModal();
     const dispatch = useDispatch();
     const navigate=useNavigate();
-    const { serverId } = useParams();
+    console.log(serverId)
     const [channelDetail, setChannelDetail] = React.useState(true);
     useEffect(()=>{
         dispatch(getChannelInfo({channel:channelId}))
@@ -55,7 +56,7 @@ const ChannelSettingDialog= NiceModal.create<ChannelSettingDialogProps & NiceMod
     
 
     const handleDelete=()=>{
-        dispatch(deleteChannel({channelId:channelId}))
+        dispatch(deleteChannel({channelId:channelId,serverId:serverId}))
        modal.hide()
     }
 

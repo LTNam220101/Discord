@@ -44,6 +44,8 @@ import ChannelSettingDialog from "../Dialog/ChannelSettingDialog"
 import { getAllChannelByServer } from "../../redux-saga/reducers/Channel/GetAllChannelByServer/actions"
 import { getUser } from "../../redux-saga/reducers/User/GetUser/actions"
 import Profiles from "../Profiles/Profiles"
+import ServerSettingDialog from "../ServerSetting/ServerSettingDialog"
+import RequestJoinServer from "./RequestJoinServer"
 import { logout } from "../../redux-saga/reducers/Authen/SignOut/actions"
 import { LOGIN_CLEAR } from "../../redux-saga/reducers/Authen/SignIn/reducers"
 import { LOGOUT_CLEAR } from "../../redux-saga/reducers/Authen/SignOut/reducers"
@@ -80,7 +82,7 @@ const ChannelRow = ({ channel, serverId }: { channel: any; serverId: string | un
         size="small"
         sx={{ position: 'absolute', top: 0, right: 0 }}
         onClick={() =>
-          NiceModal.show(ChannelSettingDialog, { channelId: channel._id })
+          NiceModal.show(ChannelSettingDialog,( { channelId: channel._id,serverId:serverId }))
         }
       >
         <SettingsIcon fontSize="small" sx={{ color: 'Grey' }} />
@@ -210,7 +212,7 @@ function ServerInfo() {
           <MenuItem
             onClick={() => {
               handleClose()
-              // NiceModal.show(ServerSetting)
+              NiceModal.show(ServerSettingDialog,{ serverId: String(serverId) })
             }}
           >
             <Stack width={190} direction="row" justifyContent="space-between">
@@ -226,6 +228,17 @@ function ServerInfo() {
           >
             <Stack width={190} direction="row" justifyContent="space-between">
               <Typography>Create Channel</Typography>
+              <AddICon fontSize="small" />
+            </Stack>
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose()
+              NiceModal.show(RequestJoinServer, { serverId: String(serverId) })
+            }}
+          >
+            <Stack width={190} direction="row" justifyContent="space-between">
+              <Typography>Request to join server</Typography>
               <AddICon fontSize="small" />
             </Stack>
           </MenuItem>
