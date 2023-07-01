@@ -13,7 +13,7 @@ const ContentSetting = (props:any) => {
           <MyAccount />
         </div>
         <div className="tabContent " hidden={index !== 1}>
-          <Profiles />
+          <Profiles id=''/>
         </div>
       </Box>
     </Stack>
