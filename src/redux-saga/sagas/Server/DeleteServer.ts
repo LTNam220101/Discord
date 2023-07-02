@@ -5,11 +5,10 @@ import { DELETE_SERVER } from "./../../actions"
 import { Request } from "../../../interfaces"
 import { getListServerJoined } from "../../../components/ServersList/actions"
 
-const deleteServerUrl= (serverId:any) => `/server/delete/${serverId}`
+const deleteServerUrl = (serverId: any) => `/server/delete/${serverId}`
 
 function deleteServer(payload: Record<string, unknown>) {
-  console.log(payload)
-  return axios.delete(deleteServerUrl(payload.serverId), payload)
+  return axios.delete(deleteServerUrl(payload.serverId))
 }
 
 function* doDeleteServer(request: Request<Record<string, unknown>>): any {

@@ -31,7 +31,7 @@ import {
 } from "@mui/icons-material"
 import { useSelector, useDispatch } from "react-redux"
 import { Link as LinkDom, useParams, useRouteError } from "react-router-dom"
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 import { State } from "../../redux-saga/reducers"
 import { AUTH_LOGOUT } from "../../redux-saga/actions"
 import UserSetting from "../../screens/UserSetting/UserSetting"
@@ -46,6 +46,9 @@ import { getUser } from "../../redux-saga/reducers/User/GetUser/actions"
 import Profiles from "../Profiles/Profiles"
 import ServerSettingDialog from "../ServerSetting/ServerSettingDialog"
 import RequestJoinServer from "./RequestJoinServer"
+import { logout } from "../../redux-saga/reducers/Authen/SignOut/actions"
+import { LOGIN_CLEAR } from "../../redux-saga/reducers/Authen/SignIn/reducers"
+import { LOGOUT_CLEAR } from "../../redux-saga/reducers/Authen/SignOut/reducers"
 
 const ChannelRow = ({ channel, serverId }: { channel: any; serverId: string | undefined }) => {
   // const activeChannel = useSelector((state) => state.servers.currentChannel);
@@ -91,11 +94,31 @@ const ChannelRow = ({ channel, serverId }: { channel: any; serverId: string | un
 function ServerInfo() {
   const theme = useTheme()
   const dispatch = useDispatch()
-  const { serverId } = useParams();
+  const { serverId } = useParams()
   console.log(serverId)
-  const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
+  const [menuOpen, setMenuOpen] = React.useState(false)
+  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
+
+  const logoutResult = useSelector((state: State) => state.logoutResult)
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (logoutResult) {
+      if (logoutResult.success) {
+        handleClose()
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("id")
+        dispatch({
+          type: LOGIN_CLEAR
+        })
+        dispatch({
+          type: LOGOUT_CLEAR
+        })
+        navigate("/login")
+      }
+    }
+  }, [logoutResult])
 
   const HandleClick = () => {
     NiceModal.show(Profiles)
@@ -103,6 +126,10 @@ function ServerInfo() {
   const handleProfile = () => {
     navigate("/profiles");
   }
+  const handleLogout = () => {
+    handleClose();
+    dispatch({ type: AUTH_LOGOUT });
+  };
   let nameServer: any = '';
   const getServerInfor = useSelector((state: State) => state.getServerByIdResult)
   if (getServerInfor && getServerInfor?.response && getServerInfor.success) {
@@ -159,7 +186,7 @@ function ServerInfo() {
             }
           }}
         >
-          {nameServer || 'Loading...'}
+          {nameServer || "Loading..."}
         </Button>
         <Menu
           id="fade-menu"
@@ -311,11 +338,15 @@ function ServerInfo() {
             </Typography>
           </Stack>
         </Stack>
+        <Menu anchorEl={menuAnchor} open={menuOpen} onClose={handleClose}>
+          {/* <MenuItem onClick={handleProfile}>{userInfo.username} # {userInfo.id.slice(0, 6)}</MenuItem> */}
+          <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
+        </Menu>
         <Stack direction="row" p={0.5} spacing={0.5}>
           <IconButton
             color="default"
             size="small"
-          // onClick={() => dispatch(setOnMicrophone(!onMicrophone))}
+            // onClick={() => dispatch(setOnMicrophone(!onMicrophone))}
           >
             {/* {onMicrophone ? <MicIcon /> : <MicOffIcon />} */}
             <MicIcon />
@@ -324,7 +355,7 @@ function ServerInfo() {
           <IconButton
             color="default"
             size="small"
-          // onClick={() => dispatch(setOnCamera(!onCamera))}
+            // onClick={() => dispatch(setOnCamera(!onCamera))}
           >
             {/* {onCamera ? <CameraIcon /> : <CameraOffIcon />} */}
             <CameraIcon />
