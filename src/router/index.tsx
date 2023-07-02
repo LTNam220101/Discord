@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   BrowserRouter,
@@ -22,6 +22,8 @@ import TextChatCpn from "../components/Chat/TextChatCPN/TextChatCPN"
 import ServerSetting from "../screens/ServerSetting/ServerSetting"
 import NiceModal from "@ebay/nice-modal-react"
 import { State } from "../redux-saga/reducers"
+import { SocketContext } from "../global/socket"
+import { io, Socket } from "socket.io-client"
 
 const ProtectedRoute = ({ user, redirectPath = "/login", children }: any) => {
   // change this
@@ -38,7 +40,6 @@ const Router = () => {
   const user =
     (loginResult?.response?.refreshToken as string) ||
     localStorage.getItem("refreshToken")
-  // const id = localStorage.getItem("id")
 
   const theme = React.useMemo(
     () =>
@@ -64,42 +65,55 @@ const Router = () => {
   )
 
   // const appStatus = useSelector(getAppStatus);
-
-  //   useEffect(() => {
-  //     dispatch(initSocket())
-  //   }, [])
+  const [socket, setSocket] = useState<Socket | undefined>(undefined)
+  useEffect(() => {
+    if (!socket) {
+      setSocket(
+        io(import.meta.env.VITE_APP_WS_SERVER, {
+          query: {
+            userId: localStorage.getItem("id")
+          }
+        })
+      )
+    }
+  }, [])
 
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <NiceModal.Provider>
-          <CssBaseline />
-          <ToastContainer />
-          <Routes>
-            <Route
-              path=""
-              element={
-                <ProtectedRoute user={user}>
-                  <Home />
-                  {/* <UserSetting /> */}
-                  {/* <TextChatCpn /> */}
-                  {/* <ServerSetting /> */}
-                </ProtectedRoute>
-              }
-            >
-              <Route path="" element={<Home />} />
-              <Route path="/channels/:serverId" element={<Home />} />
-              <Route path="/channels/:serverId/:channelId" element={<Home />} />
-              <Route path="/setting" element={<UserSetting id={""} />} />
+        <SocketContext.Provider value={socket}>
+          <NiceModal.Provider>
+            <CssBaseline />
+            <ToastContainer />
+            <Routes>
+              <Route
+                path=""
+                element={
+                  <ProtectedRoute user={user}>
+                    <Home />
+                    {/* <UserSetting /> */}
+                    {/* <TextChatCpn /> */}
+                    {/* <ServerSetting /> */}
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="" element={<Home />} />
+                <Route path="/channels/:serverId" element={<Home />} />
+                <Route
+                  path="/channels/:serverId/:channelId"
+                  element={<Home />}
+                />
+                <Route path="/setting" element={<UserSetting id={""} />} />
 
-              {/* Thêm route mới ở đây vd /channels/:serverId, /channels/:serverId/:channelId, /setting */}
-              {/* <Route path="" element={<Home />} />
+                {/* Thêm route mới ở đây vd /channels/:serverId, /channels/:serverId/:channelId, /setting */}
+                {/* <Route path="" element={<Home />} />
             <Route path="" element={<Home />} /> */}
-            </Route>
-            <Route path="login" element={<Login user={user} />} />
-            <Route path="register" element={<Register user={user} />} />
-          </Routes>
-        </NiceModal.Provider>
+              </Route>
+              <Route path="login" element={<Login user={user} />} />
+              <Route path="register" element={<Register user={user} />} />
+            </Routes>
+          </NiceModal.Provider>
+        </SocketContext.Provider>
       </ThemeProvider>
     </BrowserRouter>
   )

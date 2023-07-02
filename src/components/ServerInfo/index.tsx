@@ -49,30 +49,39 @@ import RequestJoinServer from "./RequestJoinServer"
 import { logout } from "../../redux-saga/reducers/Authen/SignOut/actions"
 import { LOGIN_CLEAR } from "../../redux-saga/reducers/Authen/SignIn/reducers"
 import { LOGOUT_CLEAR } from "../../redux-saga/reducers/Authen/SignOut/reducers"
+import {
+  setOnCamera,
+  setOnMicrophone
+} from "../../redux-saga/reducers/appState"
 
-const ChannelRow = ({ channel, serverId }: { channel: any; serverId: string | undefined }) => {
+const ChannelRow = ({
+  channel,
+  serverId
+}: {
+  channel: any
+  serverId: string | undefined
+}) => {
   // const activeChannel = useSelector((state) => state.servers.currentChannel);
-  console.log(channel)
   return (
     <Box
       borderRadius={1}
       p={0.5}
       sx={{
-        '&:hover': {
-          backgroundColor: colors.grey[700],
-        },
+        "&:hover": {
+          backgroundColor: colors.grey[700]
+        }
         // backgroundColor:
         //   // channel._id === activeChannel._id ? colors.grey[800] : 'transparent',
       }}
       position="relative"
     >
-       <Link
+      <Link
         component={LinkDom}
         underline="none"
         to={`/channels/${serverId}/${channel._id}`}
       >
         <Stack direction="row" spacing={1} color={colors.grey[500]}>
-          {channel.type === 'text' ? <TagIcon /> : <VolumeUpIcon />}
+          {channel.type === "text" ? <TagIcon /> : <VolumeUpIcon />}
           <Typography variant="subtitle2" component="h4">
             {channel.name}
           </Typography>
@@ -80,25 +89,29 @@ const ChannelRow = ({ channel, serverId }: { channel: any; serverId: string | un
       </Link>
       <IconButton
         size="small"
-        sx={{ position: 'absolute', top: 0, right: 0 }}
+        sx={{ position: "absolute", top: 0, right: 0 }}
         onClick={() =>
-          NiceModal.show(ChannelSettingDialog,( { channelId: channel._id,serverId:serverId }))
+          NiceModal.show(ChannelSettingDialog, {
+            channelId: channel._id,
+            serverId: serverId
+          })
         }
       >
-        <SettingsIcon fontSize="small" sx={{ color: 'Grey' }} />
+        <SettingsIcon fontSize="small" sx={{ color: "Grey" }} />
       </IconButton>
     </Box>
-  );
-};
+  )
+}
 
 function ServerInfo() {
   const theme = useTheme()
-  const dispatch = useDispatch()
   const { serverId } = useParams()
-  console.log(serverId)
+  const dispatch = useDispatch()
   const [menuOpen, setMenuOpen] = React.useState(false)
   const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
 
+  const onMicrophone = useSelector((state: State) => state.app.onMicrophone)
+  const onCamera = useSelector((state: State) => state.app.onCamera)
   const logoutResult = useSelector((state: State) => state.logoutResult)
 
   const navigate = useNavigate()
@@ -122,30 +135,32 @@ function ServerInfo() {
 
   const HandleClick = () => {
     NiceModal.show(Profiles)
-  };
+  }
   const handleProfile = () => {
-    navigate("/profiles");
+    navigate("/profiles")
   }
   const handleLogout = () => {
-    handleClose();
-    dispatch({ type: AUTH_LOGOUT });
-  };
-  let nameServer: any = '';
-  const getServerInfor = useSelector((state: State) => state.getServerByIdResult)
+    handleClose()
+    dispatch({ type: AUTH_LOGOUT })
+  }
+  let nameServer: any = ""
+  const getServerInfor = useSelector(
+    (state: State) => state.getServerByIdResult
+  )
   if (getServerInfor && getServerInfor?.response && getServerInfor.success) {
     nameServer = getServerInfor.response?.name
   }
   const currentServer = getServerInfor?.response
   useEffect(() => {
-    console.log(serverId)
-    dispatch(getServerInfo({ serverId }))
-    dispatch(getAllChannelByServer({ serverId }))
+    if (serverId) {
+      dispatch(getServerInfo({ serverId }))
+      dispatch(getAllChannelByServer({ serverId }))
+    }
   }, [serverId])
-  const getAllChannelByServerr = useSelector((state: State) => state.getAllChannelByServerResult)
+  const getAllChannelByServerr = useSelector(
+    (state: State) => state.getAllChannelByServerResult
+  )
   const getAllChannelByServerrr = getAllChannelByServerr?.response
-  console.log(getAllChannelByServerrr)
-  console.log(currentServer)
-  console.log(getAllChannelByServerrr && Array.isArray(getAllChannelByServerrr) && getAllChannelByServerrr)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const open = Boolean(anchorEl)
 
@@ -155,16 +170,12 @@ function ServerInfo() {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  const userId=localStorage.getItem("id");
+  const userId = localStorage.getItem("id")
   useEffect(() => {
-    console.log(userId)
-    dispatch(getUser({ userId:userId }))
+    dispatch(getUser({ userId: userId }))
   }, [dispatch])
-  const getUserResulT = useSelector((state: State) => state.getUserResult);
+  const getUserResulT = useSelector((state: State) => state.getUserResult)
 
-  useEffect(() => {
-    console.log(getUserResulT);
-  }, [getUserResulT]);
   return (
     <Stack height="100%" width="250px">
       <Stack>
@@ -212,7 +223,9 @@ function ServerInfo() {
           <MenuItem
             onClick={() => {
               handleClose()
-              NiceModal.show(ServerSettingDialog,{ serverId: String(serverId) })
+              NiceModal.show(ServerSettingDialog, {
+                serverId: String(serverId)
+              })
             }}
           >
             <Stack width={190} direction="row" justifyContent="space-between">
@@ -249,7 +262,6 @@ function ServerInfo() {
         ["text channel", 0],
         ["voice channel", 1]
       ].map(([title, type], key) => (
-        
         <Accordion
           key={key}
           defaultExpanded={true}
@@ -268,25 +280,25 @@ function ServerInfo() {
               variant="body2"
               sx={{ fontSize: "12px" }}
             >
-             {`${title}`.toUpperCase()}
+              {`${title}`.toUpperCase()}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Stack spacing={0.25}>
-             
-              {getAllChannelByServerrr && Array.isArray(getAllChannelByServerrr) && getAllChannelByServerrr
-                .filter((item: any) => item.type === type)
-                .map((item: any) => {
-                  console.log('Current item:', item);
-                  return (
-                    <ChannelRow key={item._id} channel={item} serverId={serverId} />
-                  );
-                })}
-
+              {getAllChannelByServerrr &&
+                Array.isArray(getAllChannelByServerrr) &&
+                getAllChannelByServerrr
+                  .filter((item: any) => item.type === type)
+                  .map((item: any) => {
+                    return (
+                      <ChannelRow
+                        key={item._id}
+                        channel={item}
+                        serverId={serverId}
+                      />
+                    )
+                  })}
             </Stack>
-
-
-
           </AccordionDetails>
         </Accordion>
       ))}
@@ -346,19 +358,17 @@ function ServerInfo() {
           <IconButton
             color="default"
             size="small"
-            // onClick={() => dispatch(setOnMicrophone(!onMicrophone))}
+            onClick={() => dispatch(setOnMicrophone(!onMicrophone))}
           >
-            {/* {onMicrophone ? <MicIcon /> : <MicOffIcon />} */}
-            <MicIcon />
+            {onMicrophone ? <MicIcon /> : <MicOffIcon />}
           </IconButton>
 
           <IconButton
             color="default"
             size="small"
-            // onClick={() => dispatch(setOnCamera(!onCamera))}
+            onClick={() => dispatch(setOnCamera(!onCamera))}
           >
-            {/* {onCamera ? <CameraIcon /> : <CameraOffIcon />} */}
-            <CameraIcon />
+            {onCamera ? <CameraIcon /> : <CameraOffIcon />}
           </IconButton>
           <IconButton
             onClick={() => {

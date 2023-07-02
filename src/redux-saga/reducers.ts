@@ -1,5 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit"
 import { GetListServerJoinedResult } from "../components/ServersList/reducers"
+import appState from "./reducers/appState"
 import { LoginResult } from "./reducers/Authen/SignIn/reducers"
 import { LogoutResult } from "./reducers/Authen/SignOut/reducers"
 import { registerResult } from "./reducers/Authen/SignUp/reducers"
@@ -80,7 +81,9 @@ const rootReducer = combineReducers({
   
   getUserResult: getUserResult,
   joinWithLinkResult: joinWithLinkResult,
-  requestToJoinServerResult: requestToJoinServerResult
+  requestToJoinServerResult: requestToJoinServerResult,
+
+  app: appState
 })
 
 export type State = ReturnType<typeof rootReducer>
