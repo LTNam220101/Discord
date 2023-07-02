@@ -12,3 +12,5 @@ B2: Viết trong file src\redux-saga\sagas
 B3: import từ B2 vào file src\redux-saga\sagas.ts
 
 Phần Reducers sẽ để làm sau
+
+Alo test CI 
