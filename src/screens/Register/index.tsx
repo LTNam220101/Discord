@@ -22,12 +22,12 @@ import { signUp } from "../../redux-saga/reducers/Authen/SignUp/actions"
 import { State } from "../../redux-saga/reducers"
 
 const schema = yup.object().shape({
-  username: yup.string().email().required(),
+  email: yup.string().email().required(),
   password: yup.string().required(),
   repass: yup
     .string()
-    .oneOf([yup.ref("password"), undefined], "Password must match")
-  // name: yup.string().required()
+    .oneOf([yup.ref("password"), undefined], "Password must match"),
+  username: yup.string().required()
 })
 
 export default function Register({ user }: any) {
@@ -75,8 +75,8 @@ export default function Register({ user }: any) {
             {
               username: "",
               password: "",
-              repass: ""
-              // name: ""
+              repass: "",
+              email:""
             } as RegisterForm
           }
           onSubmit={handleSubmit}
@@ -90,7 +90,7 @@ export default function Register({ user }: any) {
             isValid
           }) => (
             <form className="form" onSubmit={handleSubmit}>
-              {/* <TextField
+              <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -99,7 +99,7 @@ export default function Register({ user }: any) {
                 onBlur={handleBlur("username")}
                 value={values.username}
                 autoFocus
-              /> */}
+              />
               {err && <Alert severity="error">{err}</Alert>}
               <TextField
                 margin="normal"
@@ -107,9 +107,9 @@ export default function Register({ user }: any) {
                 fullWidth
                 label="Email address"
                 autoComplete="email"
-                onChange={handleChange("username")}
+                onChange={handleChange("email")}
                 onBlur={handleBlur("username")}
-                value={values.username}
+                value={values.email}
               />
               <TextField
                 margin="normal"
