@@ -51,6 +51,7 @@ import { updateServerRole } from '../../redux-saga/reducers/ServerRole/UpdateSer
 import { getAllServerRoles } from '../../redux-saga/reducers/ServerRole/GetAllServerRoles/actions';
 import { getUser } from '../../redux-saga/reducers/User/GetUser/actions';
 import { kickUser } from '../../redux-saga/reducers/Server/KickUser/actions';
+import Tablee from './Tablee';
 
 
 function TabPanel(props: TabPanelProps) {
@@ -481,10 +482,11 @@ const ServerSettingDialog = NiceModal.create<CreateInvitationDialogProps & NiceM
                                         >
                                             {role.name}
                                         </Typography>
-                                        <PersonIcon sx={{ color: 'text.secondary', mr: 1 }} onClick={() => NiceModal.show(Table)} />
+                                        <PersonIcon sx={{ color: 'text.secondary', mr: 1 }}  />
                                         <Typography sx={{ color: 'text.secondary' }}>
                                             {role.countMember}
                                         </Typography>
+                                        
                                     </AccordionSummary>
 
                                     <AccordionDetails>
@@ -600,9 +602,12 @@ const ServerSettingDialog = NiceModal.create<CreateInvitationDialogProps & NiceM
                             
 
                         </TabPanel>
+                        
                     </Box>
+                    
                 </DialogContent>
-            </Box>
+            </Box><button onClick={() => NiceModal.show(Tablee,{serverId:String(serverId)})}>show</button>
+            
         </Dialog>
     );
 });
