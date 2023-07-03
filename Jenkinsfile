@@ -22,7 +22,7 @@ pipeline {
     }
     post{
         always{
-            mail bcc: '', body: 'Code đã có sự thay đổi', cc: '', from: '', replyTo: '', subject: 'Cập nhật Code', to: 'quang.tv194147@gmail.com'
+            mail bcc: '', body: 'Code đã có sự thay đổi', cc: '', from: '', replyTo: '', subject: 'Cập nhật Code', to: 'quang01696103588@gmail.com'
         }
     }
 
