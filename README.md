@@ -53,9 +53,9 @@ Hướng dẫn chi tiết có ở trong báo cáo, dưới đây là các bướ
       +	Tạo public/private key cho máy chủ bạn chạy
       +	Gán private key vào ô key
       +	Tại SSH server
-      	  Name: Đặt tuỳ theo ý thích
-          HostName: địa chỉ ip của VPS
-          Username: root
+      	 + Name: Đặt tuỳ theo ý thích
+         + HostName: địa chỉ ip của VPS
+         + Username: root
       +	Chọn Test configuration để kiển tra kết nối thành công hay chưa
       +	Chọn lưu lại
     - Cấu kình kết nối Jenkins với SSH
