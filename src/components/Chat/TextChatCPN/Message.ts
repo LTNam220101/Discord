@@ -2,7 +2,7 @@ export interface Message {
     _id: string;
     author: {
       avatarUrl?: string;
-      fullname?: string;
+      username?: string;
     };
     createdAt?: string;
     content?: string;
