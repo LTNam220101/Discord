@@ -58,7 +58,7 @@ Hướng dẫn chi tiết có ở trong báo cáo, dưới đây là các bướ
           Username: root
       +	Chọn Test configuration để kiển tra kết nối thành công hay chưa
       +	Chọn lưu lại
-   -Cấu kình kết nối Jenkins với SSH
+    - Cấu kình kết nối Jenkins với SSH
       +	Chọn Pipeline cần kết nối
       +	Chọn Pipeline Syntax dùng để render cú pháp cho file Jenkensfile
       +	Tại Step => Sample step => sshPublisher: Send build artifacts orve SSh
